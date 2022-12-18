@@ -7,6 +7,38 @@
   <title>Online Shop</title>
 </head>
 <body>
+  <div class="filters">
+    <div class="category-filter"></div>
+    <div class="brand-filter"></div>
+    <div>
+      <span class="min-price"></span>
+      <input class="price-from" placeholder="цена от" type="text">
+      <input class="price-to" placeholder="цена до" type="text">
+      <span class="max-price"></span>
+    </div>
+    <div>
+      <span class="min-stock"></span>
+      <input class="stock-from" placeholder="склад от" type="text">
+      <input class="stock-to" placeholder="склад до" type="text">
+      <span class="max-stock"></span>
+    </div>
+    <button class="reset-filter">Сбросить</button>
+  </div>
+  <div>
+    Сортировать по: 
+    <select class="sort">
+      <option value="brand">по бренду</option>
+      <option value="priceAsc">по цене &uarr;</option>
+      <option value="priceDesc">по цене &darr;</option>
+      <option value="ratingAsc">по рейтингу &uarr;</option>
+      <option value="ratingDesc">по рейтингу &darr;</option>
+    </select>
+  </div>
+  <div>
+    <input class="search" type="text" placeholder="поиск">
+  </div>
+  <div>Найдено: <span class="products-count"></span></div>
+  <div class="products-not-found"></div>
   <div class="products-list"></div>
 
   

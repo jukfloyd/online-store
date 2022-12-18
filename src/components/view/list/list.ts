@@ -1,4 +1,5 @@
 import { IProduct, IProductList } from '../../app/app';
+import { IFilterSort, numberRange } from '../../controller/controller';
 import './list.css';
 
 class ProductsList {
@@ -28,6 +29,59 @@ class ProductsList {
     document.querySelector('.products-list')!.appendChild(fragment);
   }
 
+  createProductsFilter(data: IProductList, filterSortParams: IFilterSort): void {
+
+    const filterBrands: string[] = [];
+    const filterCategory: string[] = [];
+
+    data.products.forEach((item: IProduct) => {
+
+      const brand: string = item.brand;
+      if (!filterBrands.includes(brand)) {
+        filterBrands.push(brand);
+      }
+      filterBrands.sort();
+
+      const category: string = item.category;
+      if (!filterCategory.includes(category)) {
+        filterCategory.push(category);
+      }
+      filterCategory.sort();
+
+    });
+
+    filterBrands.forEach((brand, indx) => {
+      const elementLabel: HTMLLabelElement = <HTMLLabelElement>document.createElement('LABEL');
+      const elementText: HTMLSpanElement = <HTMLSpanElement>document.createElement('SPAN');
+      const elementCount: HTMLSpanElement = <HTMLSpanElement>document.createElement('SPAN');
+      const elementInput: HTMLInputElement = <HTMLInputElement>document.createElement('INPUT');
+      elementInput.type = 'checkbox';
+      elementInput.name = 'brand' + indx.toString();
+      elementInput.value = brand;
+      elementInput.checked = (filterSortParams.brands.includes(brand)) ? true : false;
+      elementText.textContent = brand;
+      elementLabel.append(elementInput);
+      elementLabel.append(elementText);
+      elementLabel.append(elementCount);
+      document.querySelector('.brand-filter')!.appendChild(elementLabel);
+    });
+
+    filterCategory.forEach((category, indx) => {
+      const elementLabel: HTMLLabelElement = <HTMLLabelElement>document.createElement('LABEL');
+      const elementText: HTMLSpanElement = <HTMLSpanElement>document.createElement('SPAN');
+      const elementCount: HTMLSpanElement = <HTMLSpanElement>document.createElement('SPAN');
+      const elementInput: HTMLInputElement = <HTMLInputElement>document.createElement('INPUT');
+      elementInput.type = 'checkbox';
+      elementInput.name = 'category' + indx.toString();
+      elementInput.value = category;
+      elementInput.checked = (filterSortParams.categories.includes(category)) ? true : false;
+      elementText.textContent = category;
+      elementLabel.append(elementInput);
+      elementLabel.append(elementText);
+      elementLabel.append(elementCount);
+      document.querySelector('.category-filter')!.appendChild(elementLabel);
+    });
+  }
 
 
 }
