@@ -83,6 +83,13 @@ class ProductsList {
     });
   }
 
+  updateFieldsValues(filterSortParams: IFilterSort): void {
+    (<HTMLInputElement>document.querySelector('.stock-from')!).value = (filterSortParams.stock) ? filterSortParams.stock[0].toString() : '';
+    (<HTMLInputElement>document.querySelector('.stock-to')!).value = (filterSortParams.stock) ? filterSortParams.stock[1].toString() : '';
+    (<HTMLInputElement>document.querySelector('.price-from')!).value = (filterSortParams.price) ? filterSortParams.price[0].toString() : '';
+    (<HTMLInputElement>document.querySelector('.price-to')!).value = (filterSortParams.price) ? filterSortParams.price[1].toString() : '';
+
+  }
 
 }
 

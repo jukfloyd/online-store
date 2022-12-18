@@ -8,12 +8,3 @@
   border-right: 1px dashed gray;
   border-bottom: 1px dashed gray;
 }
-.category-filter {
-  border: 1px solid red;
-}
-.brand-filter {
-  border: 1px solid green;
-}
-.products-line.hide {
-  display: none;
-}

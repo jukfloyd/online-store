@@ -8,6 +8,22 @@ class App {
 
   start(): void {
     this.controller.createResults();
+    (<HTMLSelectElement>document.querySelector('.price-from')!).addEventListener('change', () => {
+      this.controller.updateFilterValues();
+      this.controller.updateResults();
+    });
+    (<HTMLSelectElement>document.querySelector('.price-to')!).addEventListener('change', () => {
+      this.controller.updateFilterValues();
+      this.controller.updateResults();
+    });
+    (<HTMLSelectElement>document.querySelector('.stock-from')!).addEventListener('change', () => {
+      this.controller.updateFilterValues();
+      this.controller.updateResults();
+    });
+    (<HTMLSelectElement>document.querySelector('.stock-to')!).addEventListener('change', () => {
+      this.controller.updateFilterValues();
+      this.controller.updateResults();
+    });
   }
 
 }
