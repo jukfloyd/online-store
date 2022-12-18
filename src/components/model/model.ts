@@ -13,6 +13,10 @@ class ProductModel {
     // filter
     this.data.products.forEach((item: IProduct) => {
       if (
+          (filterSortParams.brands.length === 0 || filterSortParams.brands.includes(item.brand))
+          &&
+          (filterSortParams.categories.length === 0 || filterSortParams.categories.includes(item.category))
+          &&
           (!filterSortParams.price || (item.price >= filterSortParams.price[0] && item.price <= filterSortParams.price[1]))
           &&
           (!filterSortParams.stock || (item.stock >= filterSortParams.stock[0] && item.stock <= filterSortParams.stock[1]))

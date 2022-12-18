@@ -35,7 +35,7 @@ class ProductsListController {
     const data: IProductList = this.model.filterAndSort(this.filterSort);
     this.view.createProductsFilter(data, this.filterSort);
     this.view.showProductsList(data);
-
+    this.view.styleFilterFields(data, this.filterSort);
   }
 
   updateResults(): void {
@@ -43,10 +43,31 @@ class ProductsListController {
     this.view.showProductsList(data);
     console.log(this.filterSort);
     this.view.updateFieldsValues(this.filterSort);
+    this.view.styleFilterFields(data, this.filterSort);
   }
 
   updateFilterValues(): void {
 
+    // brands
+    const brandInputs: NodeListOf<HTMLInputElement> = document.querySelectorAll('[name^=brand]');
+    const selectedBrands: string[] = [];
+    brandInputs.forEach((input) => {
+      if (input.checked) {
+        selectedBrands.push(input.value);
+      }
+    });
+    this.filterSort.brands = selectedBrands;
+
+    // categories
+    const categoryInputs: NodeListOf<HTMLInputElement> = document.querySelectorAll('[name^=category]');
+    const selectedCategories: string[] = [];
+    categoryInputs.forEach((input) => {
+      if (input.checked) {
+        selectedCategories.push(input.value);
+      }
+    });
+    this.filterSort.categories = selectedCategories;
+    
     // sort
     this.filterSort.sort = (<HTMLSelectElement>document.querySelector('.sort')!).value;
 

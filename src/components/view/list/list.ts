@@ -83,6 +83,87 @@ class ProductsList {
     });
   }
 
+  
+  styleFilterFields(data: IProductList, filterSortParams: IFilterSort): void {
+    const countBrandsMap = new Map<string, number[]>();
+    const countCategoriesMap = new Map<string, number[]>();
+    let
+      minPrice = Number.MAX_VALUE, 
+      maxPrice = 0,
+      priceFrom = Number.MAX_VALUE,
+      priceTo = 0,
+      minStock = Number.MAX_VALUE, 
+      maxStock = 0,
+      stockFrom = Number.MAX_VALUE,
+      stockTo = 0;
+
+    data.products.forEach((item: IProduct) => {
+      const countBrand: number[] = countBrandsMap.get(item.brand) || [0, 0];
+      const countCategories: number[] = countCategoriesMap.get(item.category) || [0, 0];
+      countBrand[1] += 1;
+      countCategories[1] += 1;
+      minPrice = (item.price < minPrice) ? item.price : minPrice;
+      maxPrice = (item.price > maxPrice) ? item.price : maxPrice;
+      minStock = (item.stock < minStock) ? item.stock : minStock;
+      maxStock = (item.stock > maxStock) ? item.stock : maxStock;
+      if (!item.excluded) {
+        countBrand[0] += 1;
+        countCategories[0] += 1;
+        priceFrom = (item.price < priceFrom) ? item.price : priceFrom;
+        priceTo = (item.price > priceTo) ? item.price : priceTo;
+        stockFrom = (item.stock < stockFrom) ? item.stock : stockFrom;
+        stockTo = (item.stock > stockTo) ? item.stock : stockTo;
+      }
+      countBrandsMap.set(item.brand, countBrand);
+      countCategoriesMap.set(item.category, countCategories);
+    });
+
+    (document.querySelectorAll('[name^=brand], [name^=category]') as NodeListOf<HTMLInputElement>).forEach((input) => {
+      input.parentElement!.style.fontWeight = 'normal';
+    });
+
+    const clearFilter: boolean = (!filterSortParams.brands.length && !filterSortParams.categories.length);
+    (document.querySelectorAll('[name^=brand]') as NodeListOf<HTMLInputElement>).forEach((input) => {
+      const brands: number[] | undefined = countBrandsMap.get(input.value);
+      if (countBrandsMap.has(input.value) && !clearFilter && brands && brands[0] > 0) {
+        input.parentElement!.style.fontWeight = 'bold';
+      }
+      if (!filterSortParams.brands.length) {
+        input.checked = false;
+      }
+      const spanCount: Element | undefined = input.parentElement!.querySelectorAll('SPAN')[1];
+      if (spanCount) {
+        if (brands) {
+          spanCount.innerHTML = (clearFilter) ? '[' + brands[1] + '/' + brands[1] + ']' : '[' + brands.join('/') + ']';
+        }
+      }
+    });
+
+    (document.querySelectorAll('[name^=category]') as NodeListOf<HTMLInputElement>).forEach((input) => {
+      const categories: number[] | undefined = countCategoriesMap.get(input.value);
+      if (countCategoriesMap.has(input.value) && !clearFilter && categories && categories[0] > 0) {
+        input.parentElement!.style.fontWeight = 'bold';
+      }
+      if (!filterSortParams.categories.length) {
+        input.checked = false;
+      }
+      const spanCount: Element | undefined = input.parentElement!.querySelectorAll('SPAN')[1];
+      if (spanCount) {
+        if (categories) {
+          spanCount.innerHTML = (clearFilter) ? '[' + categories[1] + '/' + categories[1] + ']' : '[' + categories.join('/') + ']';
+        }
+      }
+    });
+
+    document.querySelector('.min-price')!.innerHTML = minPrice.toString();
+    document.querySelector('.max-price')!.innerHTML = maxPrice.toString();
+    document.querySelector('.min-stock')!.innerHTML = minStock.toString();
+    document.querySelector('.max-stock')!.innerHTML = maxStock.toString();
+
+    this.updateFieldsValues(filterSortParams);
+
+  }
+
   updateFieldsValues(filterSortParams: IFilterSort): void {
     (<HTMLSelectElement>document.querySelector('.sort')!).value = filterSortParams.sort || 'brand';
     (<HTMLInputElement>document.querySelector('.stock-from')!).value = (filterSortParams.stock) ? filterSortParams.stock[0].toString() : '';
