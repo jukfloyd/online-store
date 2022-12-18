@@ -84,6 +84,7 @@ class ProductsList {
   }
 
   updateFieldsValues(filterSortParams: IFilterSort): void {
+    (<HTMLSelectElement>document.querySelector('.sort')!).value = filterSortParams.sort || 'brand';
     (<HTMLInputElement>document.querySelector('.stock-from')!).value = (filterSortParams.stock) ? filterSortParams.stock[0].toString() : '';
     (<HTMLInputElement>document.querySelector('.stock-to')!).value = (filterSortParams.stock) ? filterSortParams.stock[1].toString() : '';
     (<HTMLInputElement>document.querySelector('.price-from')!).value = (filterSortParams.price) ? filterSortParams.price[0].toString() : '';

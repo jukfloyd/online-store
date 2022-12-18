@@ -47,6 +47,9 @@ class ProductsListController {
 
   updateFilterValues(): void {
 
+    // sort
+    this.filterSort.sort = (<HTMLSelectElement>document.querySelector('.sort')!).value;
+
     // price
     const [minPrice, maxPrice]: numberRange = this.model.getPriceRange();
     let priceFrom: string = (<HTMLInputElement>document.querySelector('.price-from')!).value;

@@ -24,6 +24,10 @@ class App {
       this.controller.updateFilterValues();
       this.controller.updateResults();
     });
+    (<HTMLSelectElement>document.querySelector('.sort')!).addEventListener('change', () => {
+      this.controller.updateFilterValues();
+      this.controller.updateResults();
+    });
   }
 
 }

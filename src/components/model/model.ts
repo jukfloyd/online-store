@@ -10,20 +10,45 @@ class ProductModel {
 
   filterAndSort(filterSortParams: IFilterSort): IProductList {
 
-        // filter
-        this.data.products.forEach((item: IProduct) => {
-          if (
-              (!filterSortParams.price || (item.price >= filterSortParams.price[0] && item.price <= filterSortParams.price[1]))
-              &&
-              (!filterSortParams.stock || (item.stock >= filterSortParams.stock[0] && item.stock <= filterSortParams.stock[1]))
-              
-            ) {
-            item.excluded = false;
-          } else {
-            item.excluded = true;
-          }
-        });
-     
+    // filter
+    this.data.products.forEach((item: IProduct) => {
+      if (
+          (!filterSortParams.price || (item.price >= filterSortParams.price[0] && item.price <= filterSortParams.price[1]))
+          &&
+          (!filterSortParams.stock || (item.stock >= filterSortParams.stock[0] && item.stock <= filterSortParams.stock[1]))
+          
+        ) {
+        item.excluded = false;
+      } else {
+        item.excluded = true;
+      }
+    });
+
+    // sort
+    if (filterSortParams.sort === 'priceAsc') {
+      this.data.products.sort((a: IProduct, b: IProduct): number  => a.price - b.price);
+    }
+    if (filterSortParams.sort === 'priceDesc') {
+      this.data.products.sort((a: IProduct, b: IProduct): number  => b.price - a.price);
+    }
+    if (filterSortParams.sort === 'ratingAsc') {
+      this.data.products.sort((a: IProduct, b: IProduct): number  => a.rating - b.rating);
+    }
+    if (filterSortParams.sort === 'ratingDesc') {
+      this.data.products.sort((a: IProduct, b: IProduct): number  => b.rating - a.rating);
+    }
+    if (filterSortParams.sort === 'brand') {
+      this.data.products.sort((a: IProduct, b: IProduct): number  => {
+        if (a.brand > b.brand) {
+          return 1;
+        } else if (a.brand < b.brand) {
+          return -1;
+        } else {
+          return 0;
+        }
+      });
+    }
+
     return this.data;
   }
 
