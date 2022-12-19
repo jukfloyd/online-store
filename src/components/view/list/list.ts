@@ -178,6 +178,13 @@ class ProductsList {
     }
   }
 
+  changeCopyButton(): void {
+    (<HTMLElement>document.querySelector('.copy-filter')!).textContent = 'Copied!';
+    setTimeout(() => {
+      (<HTMLElement>document.querySelector('.copy-filter')!).textContent = 'Copy';
+    }, 3000);
+  }
+
 }
 
 export default ProductsList;

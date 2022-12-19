@@ -53,6 +53,13 @@ class App {
         this.controller.updateResults();
       }
     });
+    (<HTMLElement>document.querySelector('.reset-filter')!).addEventListener('click', () => {
+      this.controller.resetFilter();
+      this.controller.updateResults();
+    });
+    (<HTMLElement>document.querySelector('.copy-filter')!).addEventListener('click', () => {
+      this.controller.copyFilter();
+    });
   }
 
 }

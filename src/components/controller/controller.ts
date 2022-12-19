@@ -164,6 +164,19 @@ class ProductsListController {
     this.updateUrl();
   }
 
+  resetFilter(): void {
+    this.filterSort.brands = [];
+    this.filterSort.categories = [];
+    delete this.filterSort.price;
+    delete this.filterSort.stock;
+    this.updateUrl();
+  }
+
+  copyFilter(): void {
+    navigator.clipboard.writeText(window.location.href);
+    this.view.changeCopyButton();
+  }
+
 }
 
 export default ProductsListController;
