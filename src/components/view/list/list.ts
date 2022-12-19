@@ -26,7 +26,13 @@ class ProductsList {
         fragment.append(productClone);
       }
     });
-    document.querySelector('.products-list')!.appendChild(fragment);
+    const productCount = data.products.filter(_ => !_.excluded).length;
+    document.querySelector('.products-count')!.innerHTML = `${productCount}`;
+    if (productCount) {
+      document.querySelector('.products-list')!.appendChild(fragment);
+    } else {
+      document.querySelector('.products-not-found')!.innerHTML = 'Ничего не найдено :(';
+    }
   }
 
   createProductsFilter(data: IProductList, filterSortParams: IFilterSort): void {
