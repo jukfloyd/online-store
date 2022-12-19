@@ -42,6 +42,13 @@ class App {
         this.controller.updateResults();
       }
     });
+    (<HTMLSelectElement>document.querySelector('.view')!).addEventListener('click', (e: Event) => {
+      const target = <HTMLElement>e.target;
+      if (target.nodeName === 'INPUT' || target.parentElement && target.parentElement.nodeName === 'LABEL') {
+        this.controller.updateFilterValues();
+        this.controller.updateResults();
+      }
+    });
   }
 
 }

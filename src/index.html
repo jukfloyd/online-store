@@ -37,13 +37,31 @@
   <div>
     <input class="search" type="text" placeholder="поиск">
   </div>
+  <div class="view">
+    <label><input type="radio" value="list" name="view" checked> список 1</label>
+    <label><input type="radio" value="card" name="view"> список 2</label>
+  </div>
   <div>Найдено: <span class="products-count"></span></div>
   <div class="products-not-found"></div>
   <div class="products-list"></div>
 
   
-  <template id="productTempl">
+  <template id="productTempl-list">
     <div class="products-line">
+      <div class="item-id"></div>
+      <div class="item-brand"></div>
+      <div class="item-category"></div>
+      <div class="item-title"></div>
+      <div class="item-description"></div>
+      <div class="item-price"></div>
+      <div class="item-discount"></div>
+      <div class="item-rating"></div>
+      <div class="item-stock"></div>
+    </div>
+  </template>
+
+  <template id="productTempl-card">
+    <div class="products-line-card">
       <div class="item-id"></div>
       <div class="item-brand"></div>
       <div class="item-category"></div>

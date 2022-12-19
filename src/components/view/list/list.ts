@@ -4,10 +4,10 @@ import './list.css';
 
 class ProductsList {
   
-  showProductsList(data: IProductList): void {
+  showProductsList(data: IProductList, filterSortParams: IFilterSort): void {
     document.querySelector('.products-list')!.innerHTML = '';
     const fragment: DocumentFragment = document.createDocumentFragment();
-    const productItemTemp: HTMLTemplateElement = <HTMLTemplateElement>document.querySelector('#productTempl');
+    const productItemTemp: HTMLTemplateElement = <HTMLTemplateElement>document.querySelector('#productTempl-' + filterSortParams.viewType);
 
     data.products.forEach((item: IProduct) => {
       if (!item.excluded) {
@@ -170,7 +170,12 @@ class ProductsList {
     (<HTMLInputElement>document.querySelector('.stock-to')!).value = (filterSortParams.stock) ? filterSortParams.stock[1].toString() : '';
     (<HTMLInputElement>document.querySelector('.price-from')!).value = (filterSortParams.price) ? filterSortParams.price[0].toString() : '';
     (<HTMLInputElement>document.querySelector('.price-to')!).value = (filterSortParams.price) ? filterSortParams.price[1].toString() : '';
-
+    const radio: NodeListOf<HTMLInputElement> = document.querySelectorAll('[name=view]');
+    for (const item of radio) {
+      if (item.value === filterSortParams.viewType) {
+        item.checked = true;
+      }
+    }
   }
 
 }

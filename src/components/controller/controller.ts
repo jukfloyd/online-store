@@ -12,6 +12,7 @@ export interface IFilterSort {
   price?: numberRange,
   stock?: numberRange,
   search?: string,
+  viewType?: string,
 }
 
 class ProductsListController {
@@ -22,11 +23,13 @@ class ProductsListController {
   constructor() {
     this.model = new ProductModel(database);
     this.view = new ProductsList();
+    
 
     this.filterSort = {
       sort: 'brand',
       brands: [],
       categories: [],
+      viewType: 'list',
     };
 
   }
@@ -34,13 +37,13 @@ class ProductsListController {
   createResults(): void {
     const data: IProductList = this.model.filterAndSort(this.filterSort);
     this.view.createProductsFilter(data, this.filterSort);
-    this.view.showProductsList(data);
+    this.view.showProductsList(data, this.filterSort);
     this.view.styleFilterFields(data, this.filterSort);
   }
 
   updateResults(): void {
     const data: IProductList = this.model.filterAndSort(this.filterSort);
-    this.view.showProductsList(data);
+    this.view.showProductsList(data, this.filterSort);
     console.log(this.filterSort);
     this.view.updateFieldsValues(this.filterSort);
     this.view.styleFilterFields(data, this.filterSort);
@@ -107,6 +110,8 @@ class ProductsListController {
       delete this.filterSort.stock;
     }
 
+    // view
+    this.filterSort.viewType = (<HTMLInputElement>document.querySelector('input[name="view"]:checked')!).value;
   }
 
 }
