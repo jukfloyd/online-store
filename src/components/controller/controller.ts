@@ -23,14 +23,32 @@ class ProductsListController {
   constructor() {
     this.model = new ProductModel(database);
     this.view = new ProductsList();
-    
+
+    const url: URL = new URL(window.location.href);
+    const brandsParam: string | null = url.searchParams.get('brands');
+    const categoriesParam: string | null = url.searchParams.get('categories');
+    const sortParam: string | null = url.searchParams.get('sort');
+    const priceParam: string | null = url.searchParams.get('price');
+    const stockParam: string | null = url.searchParams.get('stock');
+    const searchParam: string | null = url.searchParams.get('search');
+    const viewParam: string | null = url.searchParams.get('view');
+    const id: string | null = url.searchParams.get('id');
 
     this.filterSort = {
-      sort: 'brand',
-      brands: [],
-      categories: [],
-      viewType: 'list',
+      sort: sortParam || 'brand',
+      brands: (brandsParam) ? brandsParam.split('↕').map(_ => decodeURIComponent(_)) : [],
+      categories: (categoriesParam) ? categoriesParam.split('↕').map(_ => decodeURIComponent(_)) : [],
     };
+    if (priceParam) {
+      this.filterSort.price = priceParam.split('↕').map(_ => parseInt(_)) as [number, number];
+    }
+    if (stockParam) {
+      this.filterSort.stock = stockParam.split('↕').map(_ => parseInt(_)) as [number, number];
+    }
+    if (searchParam) {
+      this.filterSort.search = decodeURIComponent(searchParam);
+    }
+    this.filterSort.viewType = viewParam || 'list';
 
   }
 
@@ -38,6 +56,7 @@ class ProductsListController {
     const data: IProductList = this.model.filterAndSort(this.filterSort);
     this.view.createProductsFilter(data, this.filterSort);
     this.view.showProductsList(data, this.filterSort);
+    this.view.updateFieldsValues(this.filterSort);
     this.view.styleFilterFields(data, this.filterSort);
   }
 
@@ -47,6 +66,32 @@ class ProductsListController {
     console.log(this.filterSort);
     this.view.updateFieldsValues(this.filterSort);
     this.view.styleFilterFields(data, this.filterSort);
+  }
+
+  updateUrl(): void {
+    const url: URL = new URL(window.location.href);
+    (this.filterSort.brands.length)
+      ? url.searchParams.set('brands', this.filterSort.brands.map(_ => encodeURIComponent(_)).join('↕'))
+      : url.searchParams.delete('brands');
+    (this.filterSort.categories.length)
+      ? url.searchParams.set('categories', this.filterSort.categories.map(_ => encodeURIComponent(_)).join('↕'))
+      : url.searchParams.delete('categories');
+    (this.filterSort.sort)
+      ? url.searchParams.set('sort', encodeURIComponent(this.filterSort.sort))
+      : url.searchParams.delete('sort');
+    (this.filterSort.price)
+      ? url.searchParams.set('price', this.filterSort.price.join('↕'))
+      : url.searchParams.delete('price');
+    (this.filterSort.stock)
+      ? url.searchParams.set('stock', this.filterSort.stock.join('↕'))
+      : url.searchParams.delete('stock');
+    (this.filterSort.search)
+      ? url.searchParams.set('search', encodeURIComponent(this.filterSort.search))
+      : url.searchParams.delete('search');
+    (this.filterSort.viewType)
+      ? url.searchParams.set('view', this.filterSort.viewType)
+      : url.searchParams.delete('view');
+    window.history.pushState({}, '', url);
   }
 
   updateFilterValues(): void {
@@ -110,8 +155,13 @@ class ProductsListController {
       delete this.filterSort.stock;
     }
 
+    // search
+    this.filterSort.search = (<HTMLInputElement>document.querySelector('.search')!).value;
+    
     // view
     this.filterSort.viewType = (<HTMLInputElement>document.querySelector('input[name="view"]:checked')!).value;
+
+    this.updateUrl();
   }
 
 }

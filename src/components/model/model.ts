@@ -20,7 +20,19 @@ class ProductModel {
           (!filterSortParams.price || (item.price >= filterSortParams.price[0] && item.price <= filterSortParams.price[1]))
           &&
           (!filterSortParams.stock || (item.stock >= filterSortParams.stock[0] && item.stock <= filterSortParams.stock[1]))
-          
+          &&
+          (!filterSortParams.search || 
+            (
+              item.brand.toUpperCase().includes(filterSortParams.search.toUpperCase()) ||
+              item.category.toUpperCase().includes(filterSortParams.search.toUpperCase()) ||
+              item.title.toUpperCase().includes(filterSortParams.search.toUpperCase()) ||
+              item.description.toUpperCase().includes(filterSortParams.search.toUpperCase()) ||
+              item.price.toString().includes(filterSortParams.search) ||
+              item.discountPercentage.toString().includes(filterSortParams.search) ||
+              item.rating.toString().includes(filterSortParams.search) ||
+              item.stock.toString().includes(filterSortParams.search)
+            )
+          )
         ) {
         item.excluded = false;
       } else {

@@ -28,6 +28,10 @@ class App {
       this.controller.updateFilterValues();
       this.controller.updateResults();
     });
+    (<HTMLSelectElement>document.querySelector('.search')!).addEventListener('input', () => {
+      this.controller.updateFilterValues();
+      this.controller.updateResults();
+    });
     (<HTMLSelectElement>document.querySelector('.brand-filter')!).addEventListener('click', (e: Event) => {
       const target = <HTMLElement>e.target;
       if (target.nodeName === 'INPUT' || target.parentElement && target.parentElement.nodeName === 'LABEL') {
