@@ -1,8 +1,7 @@
-import { IProduct, IProductList } from '../app/app';
-import { IFilterSort, numberRange } from '../controller/controller';
+import { IProduct, IProductList, IFilterSort, numberRange } from '../app/types';
 
 class ProductModel {
-  public data: IProductList
+  data: IProductList
 
   constructor(data: IProductList) {
     this.data = data;
@@ -68,25 +67,82 @@ class ProductModel {
     return this.data;
   }
 
+  getFilteredCount(): number {
+    return this.data.products.filter(_ => _.excluded === false).length;
+  }
+
+  getCountByKey(key: 'brand' | 'category'): Map<string, numberRange> {
+    const countMap = new Map<string, numberRange>();
+    this.data.products.forEach((item: IProduct) => {
+      const count: numberRange = countMap.get(item[key]) || [0, 0];
+      count[1] += 1;
+      if (!item.excluded) {
+        count[0] += 1;
+      }
+      countMap.set(item[key], count);
+    });
+    return countMap;
+  }
+
+  getSorted(key: 'brand' | 'category'): string[] {
+    const result: string[] = [];
+    this.data.products.forEach((item: IProduct) => {
+      if (!result.includes(item[key])) {
+        result.push(item[key]);
+      }
+      result.sort();
+    });
+    return result;
+  }
+
   getPriceRange(): numberRange {
     let min = Number.MAX_VALUE, max = 0;
+    let minFilter = Number.MAX_VALUE, maxFilter = 0;
     this.data.products.forEach((item: IProduct) => {
       min = (item.price < min) ? item.price : min;
       max = (item.price > max) ? item.price : max;
+      if (!item.excluded) {
+        minFilter = (item.price < minFilter) ? item.price : minFilter;
+        maxFilter = (item.price > maxFilter) ? item.price : maxFilter;
+      }
     });
-    return [min, max];
+    if (minFilter === Number.MAX_VALUE && maxFilter === 0) {
+      minFilter = 0;
+    } else {
+      if (maxFilter > max) {
+        maxFilter = max;
+      }
+      if (minFilter < min) {
+        minFilter = min;
+      }
+    }
+    return [min, max, minFilter, maxFilter];
   }
 
   getStockRange(): numberRange {
     let min = Number.MAX_VALUE, max = 0;
+    let minFilter = Number.MAX_VALUE, maxFilter = 0;
     this.data.products.forEach((item: IProduct) => {
       min = (item.stock < min) ? item.stock : min;
       max = (item.stock > max) ? item.stock : max;
+      if (!item.excluded) {
+        minFilter = (item.stock < minFilter) ? item.stock : minFilter;
+        maxFilter = (item.stock > maxFilter) ? item.stock : maxFilter;
+      }
     });
-    return [min, max];
+    if (maxFilter > max) {
+      maxFilter = max;
+    }
+    if (minFilter < min) {
+      minFilter = min;
+    }
+    return [min, max, minFilter, maxFilter];
   }
-  
-}
 
+  getProductById(id: number): IProduct | undefined {
+    return this.data.products.filter(_ => _.id === id)[0];
+  }
+
+}
 
 export default ProductModel;

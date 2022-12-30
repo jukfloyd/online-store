@@ -7,83 +7,90 @@ class App {
   }
 
   start(): void {
-    this.controller.createResults();
-    (<HTMLSelectElement>document.querySelector('.price-from')!).addEventListener('change', () => {
-      this.controller.updateFilterValues();
+
+    // Search event
+    document.querySelector('.search')?.addEventListener('input', () => {
+      this.controller.updateFilterObject();
       this.controller.updateResults();
     });
-    (<HTMLSelectElement>document.querySelector('.price-to')!).addEventListener('change', () => {
-      this.controller.updateFilterValues();
-      this.controller.updateResults();
+
+    // Brand, Category events
+    const checkSelectors = ['.filter-brand', '.filter-category'];
+    checkSelectors.forEach((selector) => {
+      document.querySelector(selector)?.addEventListener('click', (e: Event) => {
+        const target = <HTMLElement>e.target;
+        if (target.nodeName === 'INPUT' || target.parentElement && target.parentElement.nodeName === 'LABEL') {
+          this.controller.updateFilterObject();
+          this.controller.updateResults();
+        }
+      });
     });
-    (<HTMLSelectElement>document.querySelector('.stock-from')!).addEventListener('change', () => {
-      this.controller.updateFilterValues();
-      this.controller.updateResults();
-    });
-    (<HTMLSelectElement>document.querySelector('.stock-to')!).addEventListener('change', () => {
-      this.controller.updateFilterValues();
-      this.controller.updateResults();
-    });
-    (<HTMLSelectElement>document.querySelector('.sort')!).addEventListener('change', () => {
-      this.controller.updateFilterValues();
-      this.controller.updateResults();
-    });
-    (<HTMLSelectElement>document.querySelector('.search')!).addEventListener('input', () => {
-      this.controller.updateFilterValues();
-      this.controller.updateResults();
-    });
-    (<HTMLSelectElement>document.querySelector('.brand-filter')!).addEventListener('click', (e: Event) => {
-      const target = <HTMLElement>e.target;
-      if (target.nodeName === 'INPUT' || target.parentElement && target.parentElement.nodeName === 'LABEL') {
-        this.controller.updateFilterValues();
-        this.controller.updateResults();
+
+    // Proce, Stock events
+    const rangeNames = ['price', 'stock'];
+    rangeNames.forEach((name) => {
+      const priceFromSlider: Element | null = document.querySelector('.' + name + '-from');
+      const priceToSlider: Element | null = document.querySelector('.' + name + '-to');
+      if (priceFromSlider && priceToSlider) {
+        priceToSlider.addEventListener('input', () => {
+          const fromVal: number = parseInt((<HTMLInputElement>priceFromSlider).value);
+          const toVal: number = parseInt((<HTMLInputElement>priceToSlider).value);
+          if (toVal < fromVal + 0) {
+            (<HTMLInputElement>priceFromSlider).value = (toVal - 0).toString();
+            if (fromVal.toString() === (<HTMLInputElement>priceFromSlider).min) {
+              (<HTMLInputElement>priceToSlider).value = '0';
+            }
+          }
+          this.controller.updateFilterObject();
+          this.controller.updateResults(name);
+        });
+        priceFromSlider.addEventListener('input', () => {
+          const fromVal: number = parseInt((<HTMLInputElement>priceFromSlider).value);
+          const toVal: number = parseInt((<HTMLInputElement>priceToSlider).value);
+          if (fromVal > toVal - 0) {
+            (<HTMLInputElement>priceToSlider).value = (fromVal + 0).toString();
+            if (toVal.toString() === (<HTMLInputElement>priceToSlider).max) {
+              (<HTMLInputElement>priceFromSlider).value = (parseInt((<HTMLInputElement>priceToSlider).max) - 0).toString();
+            }
+          }
+          this.controller.updateFilterObject();
+          this.controller.updateResults(name);
+        });
       }
     });
-    (<HTMLSelectElement>document.querySelector('.category-filter')!).addEventListener('click', (e: Event) => {
-      const target = <HTMLElement>e.target;
-      if (target.nodeName === 'INPUT' || target.parentElement && target.parentElement.nodeName === 'LABEL') {
-        this.controller.updateFilterValues();
-        this.controller.updateResults();
-      }
+
+    // Sort event
+    document.querySelector('.sort')?.addEventListener('change', () => {
+      this.controller.updateFilterObject();
+      this.controller.updateResults();
     });
-    (<HTMLSelectElement>document.querySelector('.view')!).addEventListener('click', (e: Event) => {
-      const target = <HTMLElement>e.target;
-      if (target.nodeName === 'INPUT' || target.parentElement && target.parentElement.nodeName === 'LABEL') {
-        this.controller.updateFilterValues();
+
+    // View type event
+    document.querySelectorAll('.view-button').forEach(elem => {
+      elem.addEventListener('click', (e: Event) => {
+        document.querySelectorAll('.view-button').forEach(elem => {
+          elem.classList.remove('active');
+        })
+        const target = <HTMLElement>e.currentTarget;
+        target.classList.add('active');
+        this.controller.updateFilterObject();
         this.controller.updateResults();
-      }
+      });
     });
-    (<HTMLElement>document.querySelector('.reset-filter')!).addEventListener('click', () => {
+    
+    // REset Filter event
+    document.querySelector('.filter-reset')?.addEventListener('click', () => {
       this.controller.resetFilter();
       this.controller.updateResults();
     });
-    (<HTMLElement>document.querySelector('.copy-filter')!).addEventListener('click', () => {
+
+    // Copy filter event
+    document.querySelector('.filter-copy')?.addEventListener('click', () => {
       this.controller.copyFilter();
     });
+
   }
 
 }
 
 export default App;
-
-export interface IProduct {
-  id: number,
-  title: string,
-  description: string,
-  price: number,
-  discountPercentage: number,
-  rating: number,
-  stock: number,
-  brand: string,
-  category: string,
-  thumbnail: string,
-  images: string[],
-  excluded?: boolean,
-}
-
-export interface IProductList {
-  products: IProduct[];
-  total?: number,
-	skip?: number,
-	limit?: number,
-}
