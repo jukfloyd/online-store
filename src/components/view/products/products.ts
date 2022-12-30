@@ -180,6 +180,19 @@ class ProductsView extends View {
     document.querySelector('.product-page')!.classList.remove('hide');
   }
 
+  changeCartButtons(data: IProduct[]): void {
+    const idArray: number[] = data.map(_ => _.id);
+    document.querySelectorAll('.add-to-cart-button').forEach((item) => {
+      const id = item.getAttribute('data-id');
+      if (id && idArray.includes(parseInt(id))) {
+        item.innerHTML = 'Drop from Cart';
+        item.classList.add('in-cart');
+      } else {
+        item.innerHTML = 'Add to Cart';
+        item.classList.remove('in-cart');
+      }
+    });
+  }
 
 }
 

@@ -1,19 +1,27 @@
-import { IProduct, IProductList, IFilterSort, numberRange, StrNumArr, stringPair } from "../app/types";
+import { IProduct, IProductList, IFilterSort, IPagination, numberRange, StrNumArr, stringPair } from "../app/types";
 import { database } from "../../assets/database";
 import ProductModel from "../model/model";
 import ProductsView from "../view/products/products";
+import CartModel from "../model/cart";
+import CartView from "../view/cart/cart";
 import View from "../view/view";
 
 class ProductsListController {
   filterSort: IFilterSort;
   productModel: ProductModel;
   productsView: ProductsView;
+  cartModel: CartModel;
+  cartView: CartView;
   view: View;
+  cartPage: IPagination;
 
   constructor() {
     this.productModel = new ProductModel(database);
     this.productsView = new ProductsView();
+    this.cartModel = new CartModel(this.productModel.data.products);
+    this.cartView = new CartView();
     this.view = new View();
+    this.cartPage = { 'countOnPage': 50, 'pageNum': 1};
 
     const url: URL = new URL(window.location.href);
     const brandsParam: string | null = url.searchParams.get('brands');
@@ -24,6 +32,10 @@ class ProductsListController {
     const searchParam: string | null = url.searchParams.get('search');
     const viewParam: string | null = url.searchParams.get('view');
     const id: string | null = url.searchParams.get('id');
+    const layer: string | null = url.searchParams.get('layer');
+    const countOnPage: string | null = url.searchParams.get('countOnPage');
+    const pageNum: string | null = url.searchParams.get('pageNum');
+    
     
     this.filterSort = {
       sort: sortParam || 'brand',
@@ -40,8 +52,26 @@ class ProductsListController {
       this.filterSort.search = decodeURIComponent(searchParam);
     }
     this.filterSort.viewType = viewParam || 'list';
+    if (countOnPage && pageNum) {
+      const count: number = parseInt(countOnPage);
+      if (!Number.isNaN(count)) {
+        if (document.querySelector('.cart-page-length [value="' + count + '"]')) {
+          this.cartPage.countOnPage = count;
+        }
+      }
+      if (!Number.isNaN(parseInt(pageNum))) {
+        this.cartPage.pageNum = parseInt(pageNum);
+        this.cartPage.pageNum = this.cartModel.getRealPageNum(this.cartPage);
+      }
+    }
 
-    this.createResults();
+    this.cartView.showHeaderCount(this.cartModel.getCount());
+    this.cartView.showHeaderTotal(this.cartModel.getTotalSum());
+    if (layer === 'cart') {
+      this.goCart();
+    } else {
+      this.createResults();
+    }
   }
 
   createResults(): void {
@@ -82,6 +112,7 @@ class ProductsListController {
     this.productsView.updateCategoryFilter(this.filterSort, this.productModel.getCountByKey('category'));
     this.productsView.showProductsList(data, this.filterSort);
     this.productsView.updateOtherFilter(this.filterSort);
+    this.productsView.changeCartButtons(this.cartModel.products);
   }
 
   updateResults(field?: string): void {
@@ -119,6 +150,7 @@ class ProductsListController {
     this.productsView.updateCategoryFilter(this.filterSort, this.productModel.getCountByKey('category'));
     this.productsView.updateOtherFilter(this.filterSort);
     this.productsView.showProductsList(data, this.filterSort);
+    this.productsView.changeCartButtons(this.cartModel.products);
   }
 
   updateUrl(): void {
@@ -203,6 +235,110 @@ class ProductsListController {
   copyFilter(): void {
     navigator.clipboard.writeText(window.location.href);
     this.productsView.changeCopyButton();
+  }
+
+  addOrDropCart(target: HTMLElement): void {
+    const id: string | null = target.getAttribute('data-id');
+    if (id) {
+      const product: IProduct | undefined  = this.productModel.getProductById(parseInt(id));
+      if (product) {
+        this.cartModel.addOrDrop(product);
+        this.cartView.showHeaderCount(this.cartModel.getCount());
+        this.cartView.showHeaderTotal(this.cartModel.getTotalSum());
+        this.productsView.changeCartButtons(this.cartModel.products);
+      }
+    }
+  }
+
+  goCart(): void {
+    this.view.hideAllLayers();
+    this.view.updateUrl({
+      'layer': 'cart',
+      'countOnPage': this.cartPage.countOnPage.toString(),
+      'pageNum': this.cartPage.pageNum.toString(),
+    });
+    const productsPaged: IProduct[] = this.cartModel.filterByPage(this.cartPage);
+    this.cartView.showCart(productsPaged, this.cartModel.getCount(), this.cartModel.getTotalSum(), this.cartPage);
+    this.cartView.showAllAppliedPromoCodes(this.cartModel.getAllAppliedPromoCodes(), this.cartModel.getTotalSumWithDiscount());
+  }
+
+  plusCount(target: HTMLElement): void {
+    const id: string | null = target.getAttribute('data-id');
+    if (id) {
+      const product: IProduct | undefined  = this.productModel.getProductById(parseInt(id));
+      if (product) {
+        this.cartModel.plusCount(product);
+        this.cartPage.pageNum = this.cartModel.getRealPageNum(this.cartPage);
+        const count: number = this.cartModel.getCount();
+        const totalSum: number = this.cartModel.getTotalSum();
+        this.cartView.showHeaderCount(count);
+        this.cartView.showHeaderTotal(totalSum);
+        this.cartView.showCart(this.cartModel.products, count, totalSum, this.cartPage);
+        this.cartView.showAllAppliedPromoCodes(this.cartModel.getAllAppliedPromoCodes(), this.cartModel.getTotalSumWithDiscount());
+      }
+    }
+  }
+
+  minusCount(target: HTMLElement): void {
+    const id: string | null = target.getAttribute('data-id');
+    if (id) {
+      const product: IProduct | undefined  = this.productModel.getProductById(parseInt(id));
+      if (product) {
+        this.cartModel.minusCount(product);
+        this.cartPage.pageNum = this.cartModel.getRealPageNum(this.cartPage);
+        const count: number = this.cartModel.getCount();
+        const totalSum: number = this.cartModel.getTotalSum();
+        this.cartView.showHeaderCount(count);
+        this.cartView.showHeaderTotal(totalSum);
+        this.cartView.showCart(this.cartModel.products, count, totalSum, this.cartPage);
+        this.cartView.showAllAppliedPromoCodes(this.cartModel.getAllAppliedPromoCodes(), this.cartModel.getTotalSumWithDiscount());
+      }
+    }
+  }
+
+  searchPromoCode(input: HTMLInputElement): void {
+    const promoText: string = input.value;
+    if (promoText !== '') {
+      const promoObj: StrNumArr | null = this.cartModel.searchNotAppliedPromoCode(promoText);
+      if (promoObj) {
+        this.cartView.showPromoCodeForAdd(promoObj);
+      }
+    }
+  }
+
+  applyPromoCode(): void {
+    const promoText: string = (<HTMLInputElement>document.querySelector('.cart-promocode')!).value;
+    this.cartModel.applyPromoCode(promoText);
+    this.cartView.clearPromoCodeForAdd();
+    this.cartView.showAllAppliedPromoCodes(this.cartModel.getAllAppliedPromoCodes(), this.cartModel.getTotalSumWithDiscount());
+  }
+
+  removePromoCode(target: HTMLElement): void {
+    const promoText: string | null = target.getAttribute('data-id');
+    if (promoText) {
+      this.cartModel.removePromoCode(promoText);
+      this.cartView.showAllAppliedPromoCodes(this.cartModel.getAllAppliedPromoCodes(), this.cartModel.getTotalSumWithDiscount());
+    }
+  }
+
+  cartNextPage(): void {
+    this.cartPage.pageNum += 1;
+    this.cartPage.pageNum = this.cartModel.getRealPageNum(this.cartPage);
+    this.goCart();
+  }
+
+  cartPrevPage(): void {
+    if (this.cartPage.pageNum > 1) {
+      this.cartPage.pageNum -= 1;
+      this.cartPage.pageNum = this.cartModel.getRealPageNum(this.cartPage);
+      this.goCart();
+    }
+  }
+
+  cartChangePageLength(): void {
+    this.cartPage.countOnPage = parseInt((<HTMLInputElement>document.querySelector('.cart-page-length')!).value);
+    this.cartPage.pageNum = this.cartModel.getRealPageNum(this.cartPage);
+    this.goCart();
   }
 
 }

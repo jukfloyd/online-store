@@ -10,6 +10,13 @@
   <header class="header">
     <div class="header-container">
       <a href="./index.html" class="header-logo"><img alt="Online store" src="./assets/img/logo.png"></a>
+      <div class="header-cart">
+        <span>
+          <svg aria-hidden="true" class="header-cart-svg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><path class="vi" fill="currentColor" d="M19.2315 17.915c-1.6704 0-3.0294 1.3649-3.0294 3.0424 0 1.6776 1.359 3.0425 3.0294 3.0425 1.6704 0 3.0294-1.3649 3.0294-3.0425 0-1.6775-1.359-3.0424-3.0294-3.0424zm0 4.2594c-.6682 0-1.2117-.5458-1.2117-1.217 0-.6711.5435-1.2169 1.2117-1.2169.6683 0 1.2118.5458 1.2118 1.2169 0 .6712-.5435 1.217-1.2118 1.217zM23.8065 4.48784c-.1721-.22118-.4359-.35018-.7155-.35018H5.60987L4.79192.70065C4.69407.289944 4.3284 0 3.90792 0H.908815C.40686-.00004765 0 .408561 0 .912675c0 .504115.40686.912725.908815.912725H3.19058l2.95365 14.0802c.09785.4111.46352.7007.884.7007H20.8795c.4178 0 .7819-.286.8822-.6931l2.2115-10.64351c.0669-.27254.0054-.56068-.1667-.78185zm-3.638 10.29306H7.74557L6.04425 5.9631H21.9298l-1.7613 8.8178zM8.23935 17.915c-1.67044 0-3.02939 1.3649-3.02939 3.0424 0 1.6776 1.359 3.0425 3.02939 3.0425 1.67038 0 3.02935-1.3649 3.02935-3.0425 0-1.6775-1.35897-3.0424-3.02935-3.0424zm0 4.2594c-.66828 0-1.21176-.5458-1.21176-1.217 0-.6711.54348-1.2169 1.21176-1.2169.66827 0 1.21175.5458 1.21175 1.2169 0 .6712-.54348 1.217-1.21175 1.217z"></path></svg>
+        </span>
+        <div class="header-cart-count"></div>
+        <span class="header-cart-total"></span>
+      </div>
     </div>
   </header>
   <main class="main">
@@ -209,6 +216,104 @@
         </div>
       </div>
       <div class="cart-page hide">
+        <div class="cart-pagination">
+          <span>Показывать по: </span>
+          <select class="cart-page-length">
+            <option value="3">3</option>
+            <option value="5">5</option>
+            <option value="10">10 </option>
+            <option value="15">15</option>
+            <option value="50">50</option>
+          </select>
+          <button class="cart-page-prev" data-id="">&lt;</button>
+          <div class="cart-page-count"></div>
+          <button class="cart-page-next" data-id="">&gt;</button>
+        </div>
+        <div class="cart-list"></div>
+        <div class="cart-summary">
+          <div class="cart-caption">Итого</div>
+          <div class="item-spec">
+            <span>Количество</span>
+            <span class="cart-count"></span>
+          </div>
+          <div class="item-spec">
+            <span>Стоимость</span>
+            <span class="cart-total"></span>
+          </div>
+          <div class="cart-promocode-block">
+            <div class="cart-caption-small">Промокоды</div>
+            <div class="cart-promocode-list"></div>
+            <div class="item-spec">
+              <span>Стоимость со скидкой</span>
+              <span class="cart-total-discount"></span>
+            </div>
+          </div>
+
+          <input type="text" class="cart-promocode" placeholder="Промокоды ('rs', 'epm')">
+          <div class="cart-promocode-found hide">
+            <div class="item-spec">
+              <span class="promo-name"></span>
+              <div>
+                <span class="promo-discount"></span>
+                <button class="cart-promocode-add">add</button>
+              </div>
+            </div>
+          </div>
+          <button class="cart-buy">Buy now!</button>
+
+          <template id="templatePromo">
+            <div class="item-spec">
+              <span class="promo-name"></span>
+              <div>
+                <span class="promo-discount"></span>
+                <button data-id="" class="cart-promocode-remove">х</button>
+              </div>
+            </div>
+          </template>
+
+        </div>
+    
+        <template id="templateCart">
+          <div class="cart-line">
+            <div class="item-number"></div>
+            <div class="cart-image"></div>
+            <div class="cart-specs">
+              <div class="item-rating-block">
+                <svg width="16" height="17" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.115 15.767c-.945.533-1.485 0-1.35-.934l.81-4.4-3.104-3.2c-.81-.666-.54-1.466.54-1.6l4.319-.8L7.22.7c.404-.933 1.214-.933 1.619 0l1.89 4.133 4.319.667c1.08.133 1.214.8.54 1.6l-2.97 3.333.81 4.4c.135 1.067-.405 1.467-1.35.934l-4.049-2-3.914 2z" fill="#76BC21"/></svg>
+                <span class="item-rating"></span>
+              </div>
+              <div class="item-title"></div>
+              <div class="item-description"></div>
+              <div class="item-spec">
+                <span>Brand</span>
+                <span class="item-brand"></span>
+              </div>
+              <div class="item-spec">
+                <span>Category</span>
+                <span class="item-category"></span>
+              </div>
+            </div>
+            <div>
+              <div class="item-spec">
+                <span>Price</span>
+                <span class="item-price"></span>
+              </div>
+              <div class="item-spec">
+                <span>Discount</span>
+                <span class="item-discount"></span>
+              </div>
+              <div class="item-spec">
+                <span>In stock</span>
+                <span class="item-stock"></span>
+              </div>
+              <div class="cart-item-buttons">
+                <button class="cart-minus" data-id="">-</button>
+                <div class="cart-item-count"></div>
+                <button class="cart-plus" data-id="">+</button>
+              </div>
+            </div>
+          </div>
+        </template>
       </div>
       
     </div>

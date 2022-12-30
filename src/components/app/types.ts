@@ -41,4 +41,10 @@ export type stringPair = {
 }
 
 export type numberRange = [number, number, number?, number?];
+export type CartType = [KeyValuePair, string[]?];
 export type StrNumArr = [string, number];
+
+export interface IPagination {
+  countOnPage: number,
+  pageNum: number,
+}

@@ -89,6 +89,53 @@ class App {
       this.controller.copyFilter();
     });
 
+    // Add to cart & Detail button event on product list page
+    document.querySelector('.products-list')?.addEventListener('click', (e: Event) => {
+      const target = <HTMLElement>e.target;
+      if (target.classList.contains('add-to-cart-button')) {
+        this.controller.addOrDropCart(target);
+      }
+    });
+
+    // Go to cart event
+    document.querySelector('.header-cart')?.addEventListener('click', () => {
+      this.controller.goCart();
+    });
+
+    //  cart Add/ remove / promoCode
+    document.querySelector('.cart-page')?.addEventListener('click', (e: Event) => {
+      const target = <HTMLElement>e.target;
+      if (target.classList.contains('cart-minus')) {
+        this.controller.minusCount(target);
+      }
+      if (target.classList.contains('cart-plus')) {
+        this.controller.plusCount(target);
+      }
+      if (target.classList.contains('cart-promocode-add')) {
+        this.controller.applyPromoCode();
+      }
+      if (target.classList.contains('cart-promocode-remove')) {
+        this.controller.removePromoCode(target);
+      }
+    });
+
+    // Cart promo codes
+    document.querySelector('.cart-promocode')?.addEventListener('input', (e: Event) => {
+      const target = <HTMLInputElement>e.target;
+      this.controller.searchPromoCode(target);
+    });
+
+    // cart pagination
+    document.querySelector('.cart-page-next')?.addEventListener('click', () => {
+      this.controller.cartNextPage();
+    });
+    document.querySelector('.cart-page-prev')?.addEventListener('click', () => {
+      this.controller.cartPrevPage();
+    });
+    document.querySelector('.cart-page-length')?.addEventListener('change', () => {
+      this.controller.cartChangePageLength();
+    });
+
   }
 
 }
