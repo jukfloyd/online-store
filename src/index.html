@@ -41,8 +41,8 @@
             <div class="filter-name">Price</div>
             <div class="filter-content">
               <div class="multi-range">
-                <input type="range" min="" max="" value="" class="price-from">
-                <input type="range" min="" max="" value="" class="price-to">
+                <input type="range" class="price-from">
+                <input type="range" class="price-to">
               </div>
               <div class="range-values">
                 <span class="price-from-value"></span> - 
@@ -54,8 +54,8 @@
             <div class="filter-name">Stock</div>
             <div class="filter-content">
               <div class="multi-range">
-                <input type="range" min="" max="" value="" class="stock-from">
-                <input type="range" min="" max="" value="" class="stock-to">
+                <input type="range" class="stock-from">
+                <input type="range" class="stock-to">
               </div>
               <div class="range-values">
                 <span class="stock-from-value"></span> - 
@@ -314,6 +314,44 @@
             </div>
           </div>
         </template>
+
+        <div class="order-page hide">
+          <div class="order-form">
+            <div class="order-caption">Personal details</div>
+            <div>
+              <input type="text" name="order-name" class="order-name" placeholder="Name Surname">
+            </div>
+            <div>
+              <input type="text" name="order-phone" class="order-phone" placeholder="Phone">
+            </div>
+            <div>
+              <input type="text" name="order-address" class="order-address" placeholder="Address">
+            </div>
+            <div>
+              <input type="text" name="order-email" class="order-email" placeholder="E-mail">
+            </div>
+            <div class="order-caption">Credit card details</div>
+            <div>
+              <input type="text" name="order-card-number" class="order-card-number" placeholder="Card number" maxlength="19">
+            </div>
+            <div>
+              <input type="text" name="order-card-until" class="order-card-until" placeholder="MM/YY" pattern="" maxlength="5">
+            </div>
+            <div>
+              <input type="text" name="order-card-cvv" class="order-card-cvv" placeholder="***" maxlength="3">
+            </div>
+            <div>
+              <input type="submit" class="order-accept" value="Отправить">
+            </div>
+            <div>
+              <input type="submit" class="order-cancel" value="Отмена">
+            </div>
+          </div>
+          <div class="order-form-success hide">
+            <p class="order-thanks">Спасибо, Ваш заказ принят!</p>
+            <p>Ожидайте звонка.</p>
+          </div>
+        </div>
       </div>
       
     </div>

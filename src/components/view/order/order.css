@@ -1,0 +1,94 @@
+.order-page {
+  position: fixed;
+  top: 140px;
+  left: 25%;
+  width: 50%;
+  background: #78909C;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  z-index: 101;
+  box-shadow: 0 4px 7px 0 rgb(0 0 0 / 23%);
+}
+
+.order-caption {
+  font-weight: 600;
+  margin: 10px 0;
+}
+
+.order-page INPUT {
+  margin: 10px 0;
+  padding: 10px;
+  width: 400px;
+  border-radius: 2px;
+  outline: none;
+  border: 1px solid transparent;
+}
+
+.order-page INPUT.error {
+  border: 1px solid red;
+}
+
+.order-page .button {
+  width: 100px;
+}
+
+.order-accept,
+.order-cancel {
+  border-radius: 3px;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  transition: all 0.3s ease-out;
+  cursor: pointer;
+}
+
+.order-accept {
+  background-color: #8BC34A;
+}
+
+.order-cancel {
+  background-color: #616161;
+}
+
+.order-accept:hover {
+  box-shadow: 0 4px 7px 0 rgb(0 0 0 / 23%);
+  background-color: #43A047;
+}
+
+.order-cancel:hover {
+  box-shadow: 0 4px 7px 0 rgb(0 0 0 / 23%);
+  color: #8BC34A;
+}
+
+.order-form-success {
+  text-align: center;
+  padding: 40px 0;
+  font-size: 24px;
+}
+
+.order-thanks {
+  font-size: 36px;
+  margin: 40px 0;
+}
+
+.order-card-number {
+  background-size: 32px;
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+
+.order-card-number.visa {
+  background-image: url('../../../assets/img/logo-visa.svg');
+}
+
+.order-card-number.ecmc {
+  background-image: url('../../../assets/img/logo-mastercard.svg');
+}
+
+.order-card-number.mir {
+  background-image: url('../../../assets/img/logo-mir.svg');
+}

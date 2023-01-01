@@ -132,6 +132,9 @@ class App {
       if (target.classList.contains('cart-promocode-remove')) {
         this.controller.removePromoCode(target);
       }
+      if (target.classList.contains('cart-buy')) {
+        this.controller.goOrder();
+      }
     });
 
     // Cart promo codes
@@ -149,6 +152,24 @@ class App {
     });
     document.querySelector('.cart-page-length')?.addEventListener('change', () => {
       this.controller.cartChangePageLength();
+    });
+
+    // Order buttons events
+    document.querySelector('.order-accept')?.addEventListener('click', () => {
+      this.controller.submitOrder();
+    });
+    document.querySelector('.order-cancel')?.addEventListener('click', () => {
+      this.controller.closeOrder();
+    });
+
+    // Order fields events
+    const orderSelectors = ['[name=order-name]', '[name=order-phone]', '[name=order-address]', '[name=order-email]', '[name=order-card-number]', '[name=order-card-until]', '[name=order-card-cvv]'];
+    orderSelectors.forEach((selector) => {
+      document.querySelector(selector)?.addEventListener('input', (e: Event) => {
+        const target = <HTMLInputElement>e.target;
+        this.controller.formatField(target);
+        this.controller.checkField(target);
+      });
     });
 
   }

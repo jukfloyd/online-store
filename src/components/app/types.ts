@@ -40,6 +40,7 @@ export type stringPair = {
   [key: string]: string;
 }
 
+export type checkResult = [boolean, string?];
 export type numberRange = [number, number, number?, number?];
 export type CartType = [KeyValuePair, string[]?];
 export type StrNumArr = [string, number];

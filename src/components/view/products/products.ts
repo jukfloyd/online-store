@@ -197,7 +197,7 @@ class ProductsView extends View {
       }
     });
   }
-
+  
 }
 
 export default ProductsView

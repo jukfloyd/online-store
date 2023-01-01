@@ -1,9 +1,11 @@
-import { IProduct, IProductList, IFilterSort, IPagination, numberRange, StrNumArr, stringPair } from "../app/types";
+import { IProduct, IProductList, checkResult, IFilterSort, IPagination, numberRange, StrNumArr, stringPair } from "../app/types";
 import { database } from "../../assets/database";
 import ProductModel from "../model/model";
 import ProductsView from "../view/products/products";
 import CartModel from "../model/cart";
 import CartView from "../view/cart/cart";
+import OrderModel from "../model/order";
+import OrderView from "../view/order/order";
 import View from "../view/view";
 
 class ProductsListController {
@@ -12,6 +14,8 @@ class ProductsListController {
   productsView: ProductsView;
   cartModel: CartModel;
   cartView: CartView;
+  orderModel: OrderModel;
+  orderView: OrderView;
   view: View;
   cartPage: IPagination;
 
@@ -20,6 +24,8 @@ class ProductsListController {
     this.productsView = new ProductsView();
     this.cartModel = new CartModel(this.productModel.data.products);
     this.cartView = new CartView();
+    this.orderModel = new OrderModel();
+    this.orderView = new OrderView();
     this.view = new View();
     this.cartPage = { 'countOnPage': 50, 'pageNum': 1};
 
@@ -390,7 +396,42 @@ class ProductsListController {
     }
   }
 
+  goOrder(): void {
+    this.orderView.showOrderForm();
+  }
+
+  submitOrder(): void {
+    let formCheck = true;
+    document.querySelectorAll('.order-form input').forEach(elem => {
+      if ((<HTMLInputElement>elem).type !== 'submit' && !this.checkField(<HTMLInputElement>elem)) {
+        formCheck = false;
+      }
+    });
+    if (formCheck) {
+      this.orderView.submitOrderForm();
+      this.cartModel.clearCart();
+      this.cartView.showHeaderCount(this.cartModel.getCount());
+      this.cartView.showHeaderTotal(this.cartModel.getTotalSum());
+      this.productsView.changeCartButtons(this.cartModel.products);
+    }
+  }
+
+  closeOrder(): void {
+    this.orderView.closeOrderForm();
+  }
+
+  formatField(input: HTMLInputElement): void {
+    input.value = this.orderModel.formatField(input.name, input.value);
+    if (input.name === 'order-card-number') {
+      this.orderView.styleCreditCardField(input);
+    }
+  }
+
+  checkField(input: HTMLInputElement): boolean {
+    const checkResult: checkResult = this.orderModel.checkField(input.name, input.value);
+    this.orderView.markField(input, checkResult);
+    return checkResult[0];
+  }
 }
 
 export default ProductsListController;
-

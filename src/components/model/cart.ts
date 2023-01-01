@@ -118,6 +118,13 @@ class CartModel {
       ? Math.ceil(Math.round(100*this.products.length/cartPage.countOnPage)/100)
       : cartPage.pageNum;
   }
+
+  clearCart(): void {
+    this.products = [];
+    this.promoCodes = [];
+    this.saveToLocalStorage();
+  }
+
 }
 
 export default CartModel;
