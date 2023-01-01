@@ -95,6 +95,21 @@ class App {
       if (target.classList.contains('add-to-cart-button')) {
         this.controller.addOrDropCart(target);
       }
+      if (target.classList.contains('detail-button')) {
+        this.controller.goDetailPage(target);
+      }
+    });
+
+    // Add to cart event on detail page
+    document.querySelector('.product-page .add-to-cart-button')?.addEventListener('click', (e: Event) => {
+      const target = <HTMLElement>e.target;
+      this.controller.addOrDropCart(target);
+    });
+
+    // Photo events
+    document.querySelector('.product-page .product-photo-all')?.addEventListener('click', (e: Event) => {
+      const target = <HTMLElement>e.target;
+      this.controller.showBigPicture(target);
     });
 
     // Go to cart event

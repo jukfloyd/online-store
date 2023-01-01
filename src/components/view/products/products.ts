@@ -180,6 +180,10 @@ class ProductsView extends View {
     document.querySelector('.product-page')!.classList.remove('hide');
   }
 
+  showBigPicture(product: IProduct, indx: number): void {
+    (<HTMLElement>document.querySelector('.product-page .product-photo-big')!).style.backgroundImage = 'url(\'' + product.images[indx] + '\')';
+  }
+
   changeCartButtons(data: IProduct[]): void {
     const idArray: number[] = data.map(_ => _.id);
     document.querySelectorAll('.add-to-cart-button').forEach((item) => {

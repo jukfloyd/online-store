@@ -31,27 +31,41 @@ class ProductsListController {
     const stockParam: string | null = url.searchParams.get('stock');
     const searchParam: string | null = url.searchParams.get('search');
     const viewParam: string | null = url.searchParams.get('view');
-    const id: string | null = url.searchParams.get('id');
-    const layer: string | null = url.searchParams.get('layer');
+    let id: string | null = url.searchParams.get('id');
+    let layer: string | null = url.searchParams.get('layer');
+    const path: string = window.location.pathname;
+    if (path) {
+      layer = path.split('/')[1];
+      if (layer === 'product') {
+        id = path.split('/')[2];
+      }
+    }
     const countOnPage: string | null = url.searchParams.get('countOnPage');
     const pageNum: string | null = url.searchParams.get('pageNum');
     
-    
-    this.filterSort = {
-      sort: sortParam || 'brand',
-      brands: (brandsParam) ? brandsParam.split('↕').map(_ => decodeURIComponent(_)) : [],
-      categories: (categoriesParam) ? categoriesParam.split('↕').map(_ => decodeURIComponent(_)) : [],
-    };
-    if (priceParam) {
-      this.filterSort.price = priceParam.split('↕').map(_ => parseInt(_)) as [number, number];
+    if (id) {
+      this.filterSort = {
+        brands: [],
+        categories: [],
+        id: parseInt(id),
+      }
+    } else {
+      this.filterSort = {
+        sort: sortParam || 'brand',
+        brands: (brandsParam) ? brandsParam.split('↕').map(_ => decodeURIComponent(_)) : [],
+        categories: (categoriesParam) ? categoriesParam.split('↕').map(_ => decodeURIComponent(_)) : [],
+      };
+      if (priceParam) {
+        this.filterSort.price = priceParam.split('↕').map(_ => parseInt(_)) as [number, number];
+      }
+      if (stockParam) {
+        this.filterSort.stock = stockParam.split('↕').map(_ => parseInt(_)) as [number, number];
+      }
+      if (searchParam) {
+        this.filterSort.search = decodeURIComponent(searchParam);
+      }
+      this.filterSort.viewType = viewParam || 'list';
     }
-    if (stockParam) {
-      this.filterSort.stock = stockParam.split('↕').map(_ => parseInt(_)) as [number, number];
-    }
-    if (searchParam) {
-      this.filterSort.search = decodeURIComponent(searchParam);
-    }
-    this.filterSort.viewType = viewParam || 'list';
     if (countOnPage && pageNum) {
       const count: number = parseInt(countOnPage);
       if (!Number.isNaN(count)) {
@@ -69,6 +83,8 @@ class ProductsListController {
     this.cartView.showHeaderTotal(this.cartModel.getTotalSum());
     if (layer === 'cart') {
       this.goCart();
+    } else if (layer === 'product') {
+      this.createProductPage();
     } else {
       this.createResults();
     }
@@ -339,6 +355,39 @@ class ProductsListController {
     this.cartPage.countOnPage = parseInt((<HTMLInputElement>document.querySelector('.cart-page-length')!).value);
     this.cartPage.pageNum = this.cartModel.getRealPageNum(this.cartPage);
     this.goCart();
+  }
+
+  goDetailPage(target: HTMLElement): void {
+    const id: string | null = target.getAttribute('data-id');
+    if (id) {
+      this.filterSort.id = parseInt(id);
+      this.view.hideAllLayers();
+      this.view.updateUrl({
+        'layer': 'product',
+        'id': id
+      });
+      this.createProductPage();
+      this.productsView.changeCartButtons(this.cartModel.products);
+    }
+  }
+
+  createProductPage(): void {
+    if (this.filterSort.id) {
+      const product: IProduct | undefined  = this.productModel.getProductById(this.filterSort.id);
+      if (product) {
+        this.productsView.showProduct(product);
+        this.productsView.changeCartButtons(this.cartModel.products);
+      }
+    }
+  }
+
+  showBigPicture(element: HTMLElement): void {
+    if (element.classList.contains('product-photo-small') && this.filterSort.id) {
+      const product: IProduct | undefined  = this.productModel.getProductById(this.filterSort.id);
+      if (product) {
+        this.productsView.showBigPicture(product, Array.from(element.parentNode!.children).indexOf(element));
+      }
+    }
   }
 
 }
