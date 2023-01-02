@@ -1,4 +1,4 @@
-import { IProduct, IProductList, checkResult, IFilterSort, IPagination, numberRange, number4Range, StrNumArr, stringPair } from "../app/types";
+import { IProduct, IProductList, checkResult, IFilterSort, IPagination, number4Range, StrNumArr, stringPair } from "../app/types";
 import { database } from "../../assets/database";
 import ProductModel from "../model/model";
 import ProductsView from "../view/products/products";
@@ -105,8 +105,8 @@ class ProductsListController {
     const filterContent: IFilterSort = {
       brands: this.productModel.getSorted('brand'),
       categories: this.productModel.getSorted('category'),
-      price: priceRange,
-      stock: stockRange,
+      price: [priceRange[0], priceRange[1]],
+      stock: [stockRange[0], stockRange[1]],
     };
     this.productsView.createProductsFilter(filterContent);
     this.productsView.updatePriceFilter(priceRange[2], priceRange[3]);
