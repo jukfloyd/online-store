@@ -108,17 +108,13 @@
   position: absolute;
 }
 
-.multi-range input[type=range]:nth-child(2) {
-  background: none;
-}
-
 .multi-range input[type=range]:nth-child(2)::-webkit-slider-thumb::before {
   background-color: grey;
 }
 
 .multi-range input[type=range] {
   appearance: none;
-  width: 100%;
+  width: 95%;
   margin: 0;
   padding: 0;
   overflow: hidden;
@@ -128,6 +124,13 @@
   background: linear-gradient(#BDBDBD, #BDBDBD) no-repeat center;
   background-size: 100% 3px;
   pointer-events: none;
+}
+
+.multi-range input[type=range]:nth-child(2) {
+  background: none;
+  width: 95%;
+  position: relative;
+  left: 5%
 }
 
 .multi-range input[type=range]:active,

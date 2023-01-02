@@ -9,7 +9,7 @@ class ProductsView extends View {
     document.querySelector('.products-list')!.innerHTML = '';
     (filterSortParams.viewType === 'card') ? document.querySelector('.products-list')!.classList.add('cards') : document.querySelector('.products-list')!.classList.remove('cards');
     const fragment: DocumentFragment = document.createDocumentFragment();
-    const productItemTemp: HTMLTemplateElement = <HTMLTemplateElement>document.querySelector('#productTempl-' + filterSortParams.viewType);
+    const productItemTemp: HTMLTemplateElement = <HTMLTemplateElement>document.querySelector('#productTempl' + filterSortParams.viewType);
 
     data.products.forEach((item: IProduct) => {
       if (!item.excluded) {
@@ -110,18 +110,28 @@ class ProductsView extends View {
     });
   }
 
-  updatePriceFilter(range: numberRange, found?: boolean): void {
-    (<HTMLInputElement>document.querySelector('.price-from')!).value = (found) ? range[0].toString() : (<HTMLInputElement>document.querySelector('.price-from')!).min;
-    (<HTMLInputElement>document.querySelector('.price-to')!).value = (found) ? range[1].toString() : (<HTMLInputElement>document.querySelector('.price-to')!).max;
-    (<HTMLElement>document.querySelector('.price-from-value')!).textContent = (found) ? '€' + range[0].toFixed(2) : '';
-    (<HTMLElement>document.querySelector('.price-to-value')!).textContent = (found) ? '€' + range[1].toFixed(2) : '';
+  updatePriceFilter(from: number, to: number): void {
+    if (from !== 0 && to !== 0) {
+      (<HTMLInputElement>document.querySelector('.price-from')!).value = from.toString();
+      (<HTMLInputElement>document.querySelector('.price-to')!).value = to.toString();
+      (<HTMLElement>document.querySelector('.price-from-value')!).textContent = '€' + from.toFixed(2);
+      (<HTMLElement>document.querySelector('.price-to-value')!).textContent = '€' + to.toFixed(2);
+    } else {
+      (<HTMLElement>document.querySelector('.price-from-value')!).textContent = '';
+      (<HTMLElement>document.querySelector('.price-to-value')!).textContent = '';
+    }
   }
 
-  updateStockFilter(range: numberRange, found?: boolean): void {
-    (<HTMLInputElement>document.querySelector('.stock-from')!).value = (found) ? range[0].toString() : (<HTMLInputElement>document.querySelector('.stock-from')!).min;
-    (<HTMLInputElement>document.querySelector('.stock-to')!).value = (found) ? range[1].toString() : (<HTMLInputElement>document.querySelector('.stock-to')!).max;
-    (<HTMLElement>document.querySelector('.stock-from-value')!).textContent = (found) ? range[0].toString() : '';
-    (<HTMLElement>document.querySelector('.stock-to-value')!).textContent = (found) ? range[1].toString() : '';
+  updateStockFilter(from: number, to: number): void {
+    if (from !== 0 && to !== 0) {
+      (<HTMLInputElement>document.querySelector('.stock-from')!).value = from.toString();
+      (<HTMLInputElement>document.querySelector('.stock-to')!).value = to.toString();
+      (<HTMLElement>document.querySelector('.stock-from-value')!).textContent = from.toString();
+      (<HTMLElement>document.querySelector('.stock-to-value')!).textContent = to.toString();
+    } else {
+      (<HTMLElement>document.querySelector('.stock-from-value')!).textContent = '';
+      (<HTMLElement>document.querySelector('.stock-to-value')!).textContent = '';
+    }
   }
 
   updateOtherFilter(filterSortParams: IFilterSort): void {

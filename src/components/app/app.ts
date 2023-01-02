@@ -10,7 +10,7 @@ class App {
 
     // Search event
     document.querySelector('.search')?.addEventListener('input', () => {
-      this.controller.updateFilterObject();
+      this.controller.updateFilterObject('search');
       this.controller.updateResults();
     });
 
@@ -20,7 +20,7 @@ class App {
       document.querySelector(selector)?.addEventListener('click', (e: Event) => {
         const target = <HTMLElement>e.target;
         if (target.nodeName === 'INPUT' || target.parentElement && target.parentElement.nodeName === 'LABEL') {
-          this.controller.updateFilterObject();
+          this.controller.updateFilterObject(selector.replace('.filter-',''));
           this.controller.updateResults();
         }
       });
@@ -35,25 +35,25 @@ class App {
         priceToSlider.addEventListener('input', () => {
           const fromVal: number = parseInt((<HTMLInputElement>priceFromSlider).value);
           const toVal: number = parseInt((<HTMLInputElement>priceToSlider).value);
-          if (toVal < fromVal + 0) {
-            (<HTMLInputElement>priceFromSlider).value = (toVal - 0).toString();
+          if (toVal < fromVal) {
+            (<HTMLInputElement>priceFromSlider).value = toVal.toString();
             if (fromVal.toString() === (<HTMLInputElement>priceFromSlider).min) {
               (<HTMLInputElement>priceToSlider).value = '0';
             }
           }
-          this.controller.updateFilterObject();
+          this.controller.updateFilterObject(name);
           this.controller.updateResults(name);
         });
         priceFromSlider.addEventListener('input', () => {
           const fromVal: number = parseInt((<HTMLInputElement>priceFromSlider).value);
           const toVal: number = parseInt((<HTMLInputElement>priceToSlider).value);
-          if (fromVal > toVal - 0) {
-            (<HTMLInputElement>priceToSlider).value = (fromVal + 0).toString();
+          if (fromVal > toVal) {
+            (<HTMLInputElement>priceToSlider).value = fromVal.toString();
             if (toVal.toString() === (<HTMLInputElement>priceToSlider).max) {
-              (<HTMLInputElement>priceFromSlider).value = (parseInt((<HTMLInputElement>priceToSlider).max) - 0).toString();
+              (<HTMLInputElement>priceFromSlider).value = parseInt((<HTMLInputElement>priceToSlider).max).toString();
             }
           }
-          this.controller.updateFilterObject();
+          this.controller.updateFilterObject(name);
           this.controller.updateResults(name);
         });
       }
@@ -61,8 +61,8 @@ class App {
 
     // Sort event
     document.querySelector('.sort')?.addEventListener('change', () => {
-      this.controller.updateFilterObject();
-      this.controller.updateResults();
+      this.controller.updateFilterObject('sort');
+      this.controller.updateResults('sort');
     });
 
     // View type event
@@ -73,7 +73,7 @@ class App {
         })
         const target = <HTMLElement>e.currentTarget;
         target.classList.add('active');
-        this.controller.updateFilterObject();
+        this.controller.updateFilterObject('view');
         this.controller.updateResults();
       });
     });

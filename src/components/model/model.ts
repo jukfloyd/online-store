@@ -1,4 +1,4 @@
-import { IProduct, IProductList, IFilterSort, numberRange } from '../app/types';
+import { IProduct, IProductList, IFilterSort, numberRange, number4Range } from '../app/types';
 
 class ProductModel {
   data: IProductList
@@ -52,7 +52,7 @@ class ProductModel {
     if (filterSortParams.sort === 'ratingDesc') {
       this.data.products.sort((a: IProduct, b: IProduct): number  => b.rating - a.rating);
     }
-    if (filterSortParams.sort === 'brand') {
+    if (filterSortParams.sort === 'brand' || filterSortParams.sort === '') {
       this.data.products.sort((a: IProduct, b: IProduct): number  => {
         if (a.brand > b.brand) {
           return 1;
@@ -95,18 +95,20 @@ class ProductModel {
     return result;
   }
 
-  getPriceRange(): numberRange {
+  getPriceRange(): number4Range {
     let min = Number.MAX_VALUE, max = 0;
     let minFilter = Number.MAX_VALUE, maxFilter = 0;
+    let found = false;
     this.data.products.forEach((item: IProduct) => {
       min = (item.price < min) ? item.price : min;
       max = (item.price > max) ? item.price : max;
       if (!item.excluded) {
+        found = true;
         minFilter = (item.price < minFilter) ? item.price : minFilter;
         maxFilter = (item.price > maxFilter) ? item.price : maxFilter;
       }
     });
-    if (minFilter === Number.MAX_VALUE && maxFilter === 0) {
+    if (!found) {
       minFilter = 0;
     } else {
       if (maxFilter > max) {
@@ -119,7 +121,7 @@ class ProductModel {
     return [min, max, minFilter, maxFilter];
   }
 
-  getStockRange(): numberRange {
+  getStockRange(): number4Range {
     let min = Number.MAX_VALUE, max = 0;
     let minFilter = Number.MAX_VALUE, maxFilter = 0;
     this.data.products.forEach((item: IProduct) => {
