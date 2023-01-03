@@ -7,7 +7,7 @@ class OrderModel {
     const validation: [string, (value: string) => boolean, string][] = [
       ['order-name', (value: string): boolean => this.checkByRegExp(value, '^[^\\s]{3,} [^\\s]{3,}'), 'Name and Surname must contain at least 3 letters'],
       ['order-phone', (value: string): boolean => this.checkByRegExp(value, '^\\+\\d{9,12}'), 'Phone must start with + and contain from 9 to 12 digits'],
-      ['order-address', (value: string): boolean => this.checkByRegExp(value, '[^\\s]{5,}.*[^\\s]{5,}.*[^\\s]{5,}'), 'Adress must contain at least 3 words with more than 4 letters'],
+      ['order-address', (value: string): boolean => value.split(' ').filter(_ => _.length >=5).length >= 3, 'Adress must contain at least 3 words with more than 5 letters'],
       ['order-email', (value: string): boolean => this.checkByRegExp(value, '^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$'), 'Not valid email'],
       ['order-card-number', (value: string): boolean => (value !== '' && this.isCreditCardNumberValid(value)), 'Invalid card number'],
       ['order-card-until', (value: string): boolean => this.isCreditCardUntilValid(value), 'Invalid date'],
