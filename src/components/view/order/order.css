@@ -27,7 +27,7 @@
 }
 
 .order-page INPUT.error {
-  border: 1px solid red;
+  border: 1px solid #B71C1C;
 }
 
 .order-page .button {
@@ -91,4 +91,9 @@
 
 .order-card-number.mir {
   background-image: url('../../../assets/img/logo-mir.svg');
+}
+
+.error-caption {
+  font-size: 14px;
+  color: #B71C1C;
 }

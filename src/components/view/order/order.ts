@@ -28,8 +28,15 @@ class OrderView extends View {
   markField(input: HTMLInputElement, checkResult: checkResult): void {
     if (checkResult[0]) {
       input.classList.remove('error');
+      input.parentElement?.querySelector('.error-caption')?.remove();
     } else {
       input.classList.add('error');
+      if (checkResult[1] && !input.parentElement?.querySelector('.error-caption')) {
+        const errorDiv: HTMLElement = document.createElement('div');
+        errorDiv.classList.add('error-caption');
+        errorDiv.innerHTML = checkResult[1];
+        input.parentElement?.append(errorDiv);
+      }
     }
   }
 
