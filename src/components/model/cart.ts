@@ -12,14 +12,14 @@ class CartModel {
   constructor(data: IProduct[]) {
     const cartInStorage: string | null = localStorage.getItem('cart');
     if (cartInStorage) {
-      const cart = JSON.parse(cartInStorage);
+      const cart: CartType = JSON.parse(cartInStorage);
       const idAndCount: KeyValuePair = cart[0];
       this.products = data.filter(_ => Object.keys(idAndCount).includes(_.id.toString()));
       this.products = this.products.map(_ => {
         _.cart = idAndCount[_.id];
         return _;
       });
-      this.promoCodes = cart[1];
+      this.promoCodes = cart[1] || [];
     } else {
       this.products = [];
       this.promoCodes = [];

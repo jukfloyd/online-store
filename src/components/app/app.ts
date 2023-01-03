@@ -15,10 +15,10 @@ class App {
     });
 
     // Brand, Category events
-    const checkSelectors = ['.filter-brand', '.filter-category'];
+    const checkSelectors: string[] = ['.filter-brand', '.filter-category'];
     checkSelectors.forEach((selector) => {
       document.querySelector(selector)?.addEventListener('click', (e: Event) => {
-        const target = <HTMLElement>e.target;
+        const target: HTMLElement = <HTMLElement>e.target;
         if (target.nodeName === 'INPUT' || target.parentElement && target.parentElement.nodeName === 'LABEL') {
           this.controller.updateFilterObject(selector.replace('.filter-',''));
           this.controller.updateResults();
@@ -27,7 +27,7 @@ class App {
     });
 
     // Proce, Stock events
-    const rangeNames = ['price', 'stock'];
+    const rangeNames: string[] = ['price', 'stock'];
     rangeNames.forEach((name) => {
       const priceFromSlider: Element | null = document.querySelector('.' + name + '-from');
       const priceToSlider: Element | null = document.querySelector('.' + name + '-to');
@@ -71,7 +71,7 @@ class App {
         document.querySelectorAll('.view-button').forEach(elem => {
           elem.classList.remove('active');
         })
-        const target = <HTMLElement>e.currentTarget;
+        const target: HTMLElement = <HTMLElement>e.currentTarget;
         target.classList.add('active');
         this.controller.updateFilterObject('view');
         this.controller.updateResults();
@@ -91,7 +91,7 @@ class App {
 
     // Add to cart & Detail button event on product list page
     document.querySelector('.products-list')?.addEventListener('click', (e: Event) => {
-      const target = <HTMLElement>e.target;
+      const target: HTMLElement = <HTMLElement>e.target;
       if (target.classList.contains('add-to-cart-button')) {
         this.controller.addOrDropCart(target);
       }
@@ -102,13 +102,13 @@ class App {
 
     // Add to cart event on detail page
     document.querySelector('.product-page .add-to-cart-button')?.addEventListener('click', (e: Event) => {
-      const target = <HTMLElement>e.target;
+      const target: HTMLElement = <HTMLElement>e.target;
       this.controller.addOrDropCart(target);
     });
 
     // Photo events
     document.querySelector('.product-page .product-photo-all')?.addEventListener('click', (e: Event) => {
-      const target = <HTMLElement>e.target;
+      const target: HTMLElement = <HTMLElement>e.target;
       this.controller.showBigPicture(target);
     });
 
@@ -119,7 +119,7 @@ class App {
 
     //  cart Add/ remove / promoCode
     document.querySelector('.cart-page')?.addEventListener('click', (e: Event) => {
-      const target = <HTMLElement>e.target;
+      const target: HTMLElement = <HTMLElement>e.target;
       if (target.classList.contains('cart-minus')) {
         this.controller.minusCount(target);
       }
@@ -139,7 +139,7 @@ class App {
 
     // Cart promo codes
     document.querySelector('.cart-promocode')?.addEventListener('input', (e: Event) => {
-      const target = <HTMLInputElement>e.target;
+      const target: HTMLInputElement = <HTMLInputElement>e.target;
       this.controller.searchPromoCode(target);
     });
 
@@ -166,7 +166,7 @@ class App {
     const orderSelectors = ['[name=order-name]', '[name=order-phone]', '[name=order-address]', '[name=order-email]', '[name=order-card-number]', '[name=order-card-until]', '[name=order-card-cvv]'];
     orderSelectors.forEach((selector) => {
       document.querySelector(selector)?.addEventListener('input', (e: Event) => {
-        const target = <HTMLInputElement>e.target;
+        const target: HTMLInputElement = <HTMLInputElement>e.target;
         this.controller.formatField(target);
         this.controller.checkField(target);
       });

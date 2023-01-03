@@ -43,10 +43,10 @@ class OrderModel {
   }
 
   isCreditCardUntilValid(validUntil: string): boolean {
-    const validArr = validUntil.split('/');
+    const validArr: string[] = validUntil.split('/');
     if (validArr.length === 2) {
-      const month = parseInt(validArr[0]);
-      const year = parseInt(validArr[1]);
+      const month: number = parseInt(validArr[0]);
+      const year: number = parseInt(validArr[1]);
       if (month && year && month > 0 && month <= 12 && year >= 22) {
         return true;
       } else {
