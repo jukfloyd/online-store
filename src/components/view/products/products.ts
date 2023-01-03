@@ -41,7 +41,7 @@ class ProductsView extends View {
       document.querySelector('.products-not-found')!.innerHTML = '';
       document.querySelector('.products-not-found')!.classList.add('hide');
     } else {
-      document.querySelector('.products-not-found')!.innerHTML = 'Ничего не найдено :(';
+      document.querySelector('.products-not-found')!.innerHTML = 'Nothing found :(';
       document.querySelector('.products-not-found')!.classList.remove('hide');
     }
     document.querySelector('.products-list-page')!.classList.remove('hide');

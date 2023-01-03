@@ -60,7 +60,7 @@ class CartView extends View {
   }
 
   showEmptyCart(): void {
-    document.querySelector('.cart-list')!.innerHTML = 'Корзина пуста...';
+    document.querySelector('.cart-list')!.innerHTML = 'You cart is empty...';
     document.querySelector('.cart-summary')!.classList.add('hide');
     document.querySelector('.cart-pagination')!.classList.add('hide');
   }
