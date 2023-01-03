@@ -4,7 +4,7 @@ class View {
   layers: string[];
 
   constructor() {
-    this.layers = ['.products-list-page', '.product-page', '.cart-page'];
+    this.layers = ['.products-list-page', '.product-page', '.cart-page', '.page-404'];
 
     window.onpopstate = function() {
       window.location.reload();
@@ -17,7 +17,7 @@ class View {
     });
   }
 
-  updateUrl(params: stringPair): void {
+  updateUrl(path: string, params: stringPair): void {
     const href: string = window.location.href;
     const url: URL = new URL((href.indexOf('?') !== -1) ? href.slice(0,href.indexOf('?')) : href);
     Object.keys(params).forEach(key => {
@@ -25,6 +25,7 @@ class View {
         url.searchParams.set(key, params[key]);
       }
     });
+    url.pathname = path;
     window.history.pushState({}, '', url);
   }
 
@@ -44,6 +45,10 @@ class View {
     }
   }
 
+  show404(): void {
+    this.hideAllLayers();
+    document.querySelector('.page-404')!.classList.remove('hide');
+  }
 }
 
 export default View;

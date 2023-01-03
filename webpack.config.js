@@ -20,6 +20,14 @@ const config = {
   devServer: {
     open: true,
     host: "localhost",
+    historyApiFallback: true,
+    // proxy: {
+    //   '/*': {
+    //     target: 'http://localhost:8080/index.html',
+    //     pathRewrite: { '^/.*': '' },
+    //     secure: false,
+    //   },
+    //}
   },
   plugins: [
     new HtmlWebpackPlugin({

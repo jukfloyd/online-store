@@ -28,6 +28,7 @@ class ProductsListController {
     this.orderView = new OrderView();
     this.view = new View();
     this.cartPage = { 'countOnPage': 50, 'pageNum': 1};
+    this.filterSort = { 'brands': [], categories: []};
 
     const url: URL = new URL(window.location.href);
     const brandsParam: string | null = url.searchParams.get('brands');
@@ -38,9 +39,9 @@ class ProductsListController {
     const searchParam: string | null = url.searchParams.get('search');
     const viewParam: string | null = url.searchParams.get('view');
     let id: string | null = url.searchParams.get('id');
-    let layer: string | null = url.searchParams.get('layer');
+    let layer = '';
     const path: string = window.location.pathname;
-    if (path) {
+    if (path !== '/' && path !== '/index.html') {
       layer = path.split('/')[1];
       if (layer === 'product') {
         id = path.split('/')[2];
@@ -49,13 +50,10 @@ class ProductsListController {
     const countOnPage: string | null = url.searchParams.get('countOnPage');
     const pageNum: string | null = url.searchParams.get('pageNum');
     
-    if (id) {
-      this.filterSort = {
-        brands: [],
-        categories: [],
-        id: parseInt(id),
-      }
-    } else {
+    this.cartView.showHeaderCount(this.cartModel.getCount());
+    this.cartView.showHeaderTotal(this.cartModel.getTotalSum());
+
+    if (layer === '') {
       this.filterSort = {
         sort: sortParam || '',
         brands: (brandsParam) ? brandsParam.split('↕').map(_ => decodeURIComponent(_)) : [],
@@ -71,34 +69,39 @@ class ProductsListController {
         this.filterSort.search = decodeURIComponent(searchParam);
       }
       this.filterSort.viewType = (viewParam === 'card') ? viewParam : '';
-    }
-    if (countOnPage && pageNum) {
-      const count: number = parseInt(countOnPage);
-      if (!Number.isNaN(count)) {
-        if (document.querySelector('.cart-page-length [value="' + count + '"]')) {
-          this.cartPage.countOnPage = count;
+      this.createResults();
+    } else if (layer === 'cart') {
+      if (countOnPage && pageNum) {
+        const count: number = parseInt(countOnPage);
+        if (!Number.isNaN(count)) {
+          if (document.querySelector('.cart-page-length [value="' + count + '"]')) {
+            this.cartPage.countOnPage = count;
+          }
+        }
+        if (!Number.isNaN(parseInt(pageNum))) {
+          this.cartPage.pageNum = parseInt(pageNum);
+          this.cartPage.pageNum = this.cartModel.getRealPageNum(this.cartPage);
         }
       }
-      if (!Number.isNaN(parseInt(pageNum))) {
-        this.cartPage.pageNum = parseInt(pageNum);
-        this.cartPage.pageNum = this.cartModel.getRealPageNum(this.cartPage);
-      }
-    }
-
-    this.cartView.showHeaderCount(this.cartModel.getCount());
-    this.cartView.showHeaderTotal(this.cartModel.getTotalSum());
-    if (layer === 'cart') {
       this.goCart();
     } else if (layer === 'product') {
-      this.createProductPage();
+      if (id && !Number.isNaN(-id)) {
+        this.filterSort = {
+          brands: [],
+          categories: [],
+          id: parseInt(id),
+        }
+        this.createProductPage();
+      } else {
+        this.view.show404();
+      }
     } else {
-      this.createResults();
+      this.view.show404();
     }
   }
 
   createResults(): void {
     const data: IProductList = this.productModel.filterAndSort(this.filterSort);
-    const foundProducts: boolean = (this.productModel.getFilteredCount()) ? true : false;
     this.view.hideAllLayers();
     const priceRange: number4Range = this.productModel.getPriceRange();
     const stockRange: number4Range = this.productModel.getStockRange();
@@ -120,7 +123,6 @@ class ProductsListController {
 
   updateResults(field?: string): void {
     const data: IProductList = this.productModel.filterAndSort(this.filterSort);
-    const foundProducts: boolean = (this.productModel.getFilteredCount()) ? true : false;
     const priceRange: number4Range = this.productModel.getPriceRange();
     const stockRange: number4Range = this.productModel.getStockRange();
     if (field !== 'price') {
@@ -150,7 +152,7 @@ class ProductsListController {
       'search': (this.filterSort.search) ? encodeURIComponent(this.filterSort.search) : '',
       'view': (this.filterSort.viewType) ? this.filterSort.viewType : '',
     };
-    this.view.updateUrl(filterParams);
+    this.view.updateUrl('/', filterParams);
   }
 
   updateFilterObject(filterName?: string): void {
@@ -253,8 +255,7 @@ class ProductsListController {
 
   goCart(): void {
     this.view.hideAllLayers();
-    this.view.updateUrl({
-      'layer': 'cart',
+    this.view.updateUrl('/cart', {
       'countOnPage': this.cartPage.countOnPage.toString(),
       'pageNum': this.cartPage.pageNum.toString(),
     });
@@ -347,10 +348,7 @@ class ProductsListController {
     if (id) {
       this.filterSort.id = parseInt(id);
       this.view.hideAllLayers();
-      this.view.updateUrl({
-        'layer': 'product',
-        'id': id
-      });
+      this.view.updateUrl('/product/' + id, {});
       this.createProductPage();
       this.productsView.changeCartButtons(this.cartModel.products);
     }
@@ -362,7 +360,10 @@ class ProductsListController {
       if (product) {
         this.productsView.showProduct(product);
         this.productsView.changeCartButtons(this.cartModel.products);
+      } else {
+        this.view.show404();
       }
+      
     }
   }
 

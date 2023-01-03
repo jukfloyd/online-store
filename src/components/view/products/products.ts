@@ -156,7 +156,6 @@ class ProductsView extends View {
 
   showProduct(item: IProduct) {
     (<HTMLElement>document.querySelector('.products-list-page')!).style.display = 'none';
-    (<HTMLElement>document.querySelector('.products-list-page')!).style.display = 'none';
 
     this.safeInnerHTML('.product-page .item-brand', item.brand);
     this.safeInnerHTML('.product-page .item-category', item.category);
