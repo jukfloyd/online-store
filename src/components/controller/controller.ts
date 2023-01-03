@@ -392,7 +392,12 @@ class ProductsListController {
       this.cartModel.clearCart();
       this.cartView.showHeaderCount(this.cartModel.getCount());
       this.cartView.showHeaderTotal(this.cartModel.getTotalSum());
+      this.cartView.showEmptyCart();
       this.productsView.changeCartButtons(this.cartModel.products);
+      setTimeout(() => {
+        this.orderView.closeOrderForm();
+        document.location = '/';
+      }, 3000);
     }
   }
 

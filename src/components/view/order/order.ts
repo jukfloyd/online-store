@@ -19,10 +19,6 @@ class OrderView extends View {
   submitOrderForm(): void {
     document.querySelector('.order-form')!.classList.add('hide');
     document.querySelector('.order-form-success')!.classList.remove('hide');
-    setTimeout(() => {
-      this.closeOrderForm();
-      // window.location 
-    }, 3000);
   }
 
   markField(input: HTMLInputElement, checkResult: checkResult): void {
