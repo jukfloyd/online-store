@@ -62,6 +62,7 @@ class OrderModel {
     const validation: [string, (value: string) => string][] = [
       ['order-card-number', (value: string): string => value.replace(/[^0-9]/g, '').replace(/(\d\d\d\d)/g, '$1 ').replace(/ $/, '')],
       ['order-card-until', (value: string): string => value.replace(/[^0-9]/g, '').replace(/^(\d\d)(\d{0,2})$/g, '$1/$2').replace(/\/$/,'')],
+      ['order-card-cvv', (value: string): string => value.replace(/[^0-9]/g, '')],
     ]
     for (const item of validation) {
       if (item[0] === fieldName) {
