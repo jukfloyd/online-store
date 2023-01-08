@@ -461,3 +461,22 @@
 .product-photo-small:hover {
   border: 2px solid #8BC34A;
 }
+
+.product-buy {
+  background-color: #616161;
+  border-radius: 3px;
+  font-size: 16px;
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  transition: all 0.3s ease-out;
+  cursor: pointer;
+  width: 100%;
+  height: 48px;
+  text-align: center;
+}
+
+.product-buy:hover {
+  box-shadow: 0 4px 7px 0 rgb(0 0 0 / 23%);
+  color: #8BC34A;
+}

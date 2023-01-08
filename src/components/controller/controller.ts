@@ -381,6 +381,22 @@ class ProductsListController {
     this.orderView.showOrderForm();
   }
 
+  buyNow(target: HTMLElement): void {
+    const id: string | null = target.getAttribute('data-id');
+    if (id) {
+      const product: IProduct | undefined  = this.productModel.getProductById(parseInt(id));
+      if (product) {
+        if (!this.cartModel.hasId(parseInt(id))) {
+          this.cartModel.addOrDrop(product);
+          this.cartView.showHeaderCount(this.cartModel.getCount());
+          this.cartView.showHeaderTotal(this.cartModel.getTotalSum());
+        }
+        this.goCart();
+        this.orderView.showOrderForm();
+      }
+    }
+  }
+
   submitOrder(): void {
     let formCheck = true;
     document.querySelectorAll('.order-form input').forEach(elem => {

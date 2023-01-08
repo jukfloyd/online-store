@@ -166,6 +166,7 @@ class ProductsView extends View {
     this.safeInnerHTML('.product-page .item-rating', item.rating.toString());
     this.safeInnerHTML('.product-page .item-stock', item.stock.toString());
     this.safeAttribute('.product-page .add-to-cart-button', 'data-id', item.id.toString());
+    this.safeAttribute('.product-page .product-buy', 'data-id', item.id.toString());
 
     const imgDiv: Element | null = document.querySelector('.product-page .product-photo-big');
     const allPhoto: Element | null = document.querySelector('.product-photo-all');

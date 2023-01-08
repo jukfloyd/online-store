@@ -122,6 +122,12 @@ class App {
       controller.addOrDropCart(target);
     });
 
+    // Buy now on detail page
+    document.querySelector('.product-page .product-buy')?.addEventListener('click', (e: Event) => {
+      const target: HTMLElement = <HTMLElement>e.target;
+      controller.buyNow(target);
+    });
+
     // Photo events
     document.querySelector('.product-page .product-photo-all')?.addEventListener('click', (e: Event) => {
       const target: HTMLElement = <HTMLElement>e.target;
