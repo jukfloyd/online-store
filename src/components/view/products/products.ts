@@ -34,7 +34,7 @@ class ProductsView extends View {
         fragment.append(productClone);
       }
     });
-    const productCount = data.products.filter(_ => !_.excluded).length;
+    const productCount: number = data.products.filter(_ => !_.excluded).length;
     document.querySelector('.products-count')!.innerHTML = `${productCount}`;
     if (productCount) {
       document.querySelector('.products-list')!.appendChild(fragment);
@@ -179,10 +179,10 @@ class ProductsView extends View {
       });
     }
 
-    const breadCategory = <HTMLAnchorElement>document.querySelector('.breadcrumbs .category');
+    const breadCategory: HTMLAnchorElement = <HTMLAnchorElement>document.querySelector('.breadcrumbs .category');
     breadCategory!.href = 'index.html?categories=' + encodeURIComponent(item.category);
     breadCategory!.innerHTML = item.category;
-    const breadBrand = <HTMLAnchorElement>document.querySelector('.breadcrumbs .brand');
+    const breadBrand: HTMLAnchorElement = <HTMLAnchorElement>document.querySelector('.breadcrumbs .brand');
     breadBrand!.href = 'index.html?categories=' + encodeURIComponent(item.category) + '&brands=' + encodeURIComponent(item.brand);
     breadBrand!.innerHTML = item.brand;
     document.querySelector('.breadcrumbs .product')!.innerHTML = item.title;
@@ -196,7 +196,7 @@ class ProductsView extends View {
   changeCartButtons(data: IProduct[]): void {
     const idArray: number[] = data.map(_ => _.id);
     document.querySelectorAll('.add-to-cart-button').forEach((item) => {
-      const id = item.getAttribute('data-id');
+      const id: string | null = item.getAttribute('data-id');
       if (id && idArray.includes(parseInt(id))) {
         item.innerHTML = 'Drop from Cart';
         item.classList.add('in-cart');
