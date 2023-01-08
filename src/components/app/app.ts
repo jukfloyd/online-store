@@ -4,7 +4,7 @@ import { IProductList } from './types';
 class App {
 
   async fetchDatabase<T>(): Promise<T> {
-    const response = await fetch('https://dummyjson.com/products?limit=100');
+    const response: Response = await fetch('https://dummyjson.com/products?limit=100');
     const data: T = await response.json()
     if (response.ok) {
         return data;
@@ -16,7 +16,6 @@ class App {
   start(): void {
     this.fetchDatabase()
       .then(data => {
-        console.log(data);
         const controller: ProductsListAppController = new ProductsListAppController(<IProductList>data);
         this.setEvents(controller);
       })
