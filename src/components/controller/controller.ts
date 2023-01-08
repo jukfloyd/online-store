@@ -1,5 +1,4 @@
 import { IProduct, IProductList, checkResult, IFilterSort, IPagination, number4Range, StrNumArr, stringPair } from "../app/types";
-import { database } from "../../assets/database";
 import ProductModel from "../model/model";
 import ProductsView from "../view/products/products";
 import CartModel from "../model/cart";
@@ -19,7 +18,7 @@ class ProductsListController {
   view: View;
   cartPage: IPagination;
 
-  constructor() {
+  constructor(database: IProductList) {
     this.productModel = new ProductModel(database);
     this.productsView = new ProductsView();
     this.cartModel = new CartModel(this.productModel.data.products);
