@@ -274,7 +274,8 @@ class ProductsListController {
         const totalSum: number = this.cartModel.getTotalSum();
         this.cartView.showHeaderCount(count);
         this.cartView.showHeaderTotal(totalSum);
-        this.cartView.showCart(this.cartModel.products, count, totalSum, this.cartPage);
+        const productsPaged: IProduct[] = this.cartModel.filterByPage(this.cartPage);
+        this.cartView.showCart(productsPaged, count, totalSum, this.cartPage);
         this.cartView.showAllAppliedPromoCodes(this.cartModel.getAllAppliedPromoCodes(), this.cartModel.getTotalSumWithDiscount());
       }
     }
@@ -291,7 +292,8 @@ class ProductsListController {
         const totalSum: number = this.cartModel.getTotalSum();
         this.cartView.showHeaderCount(count);
         this.cartView.showHeaderTotal(totalSum);
-        this.cartView.showCart(this.cartModel.products, count, totalSum, this.cartPage);
+        const productsPaged: IProduct[] = this.cartModel.filterByPage(this.cartPage);
+        this.cartView.showCart(productsPaged, count, totalSum, this.cartPage);
         this.cartView.showAllAppliedPromoCodes(this.cartModel.getAllAppliedPromoCodes(), this.cartModel.getTotalSumWithDiscount());
       }
     }
