@@ -1,38 +1,32 @@
 import { IProduct, IProductList, IFilterSort, numberRange, number4Range } from '../app/types';
 
 class ProductModel {
-  data: IProductList
+  data: IProductList;
 
   constructor(data: IProductList) {
     this.data = data;
   }
 
   filterAndSort(filterSortParams: IFilterSort): IProductList {
-
     // filter
     this.data.products.forEach((item: IProduct) => {
       if (
-          (filterSortParams.brands.length === 0 || filterSortParams.brands.includes(item.brand))
-          &&
-          (filterSortParams.categories.length === 0 || filterSortParams.categories.includes(item.category))
-          &&
-          (!filterSortParams.price || (item.price >= filterSortParams.price[0] && item.price <= filterSortParams.price[1]))
-          &&
-          (!filterSortParams.stock || (item.stock >= filterSortParams.stock[0] && item.stock <= filterSortParams.stock[1]))
-          &&
-          (!filterSortParams.search || 
-            (
-              item.brand.toUpperCase().includes(filterSortParams.search.toUpperCase()) ||
-              item.category.toUpperCase().includes(filterSortParams.search.toUpperCase()) ||
-              item.title.toUpperCase().includes(filterSortParams.search.toUpperCase()) ||
-              item.description.toUpperCase().includes(filterSortParams.search.toUpperCase()) ||
-              item.price.toString().includes(filterSortParams.search) ||
-              item.discountPercentage.toString().includes(filterSortParams.search) ||
-              item.rating.toString().includes(filterSortParams.search) ||
-              item.stock.toString().includes(filterSortParams.search)
-            )
-          )
-        ) {
+        (filterSortParams.brands.length === 0 || filterSortParams.brands.includes(item.brand)) &&
+        (filterSortParams.categories.length === 0 || filterSortParams.categories.includes(item.category)) &&
+        (!filterSortParams.price ||
+          (item.price >= filterSortParams.price[0] && item.price <= filterSortParams.price[1])) &&
+        (!filterSortParams.stock ||
+          (item.stock >= filterSortParams.stock[0] && item.stock <= filterSortParams.stock[1])) &&
+        (!filterSortParams.search ||
+          item.brand.toUpperCase().includes(filterSortParams.search.toUpperCase()) ||
+          item.category.toUpperCase().includes(filterSortParams.search.toUpperCase()) ||
+          item.title.toUpperCase().includes(filterSortParams.search.toUpperCase()) ||
+          item.description.toUpperCase().includes(filterSortParams.search.toUpperCase()) ||
+          item.price.toString().includes(filterSortParams.search) ||
+          item.discountPercentage.toString().includes(filterSortParams.search) ||
+          item.rating.toString().includes(filterSortParams.search) ||
+          item.stock.toString().includes(filterSortParams.search))
+      ) {
         item.excluded = false;
       } else {
         item.excluded = true;
@@ -41,19 +35,19 @@ class ProductModel {
 
     // sort
     if (filterSortParams.sort === 'priceAsc') {
-      this.data.products.sort((a: IProduct, b: IProduct): number  => a.price - b.price);
+      this.data.products.sort((a: IProduct, b: IProduct): number => a.price - b.price);
     }
     if (filterSortParams.sort === 'priceDesc') {
-      this.data.products.sort((a: IProduct, b: IProduct): number  => b.price - a.price);
+      this.data.products.sort((a: IProduct, b: IProduct): number => b.price - a.price);
     }
     if (filterSortParams.sort === 'ratingAsc') {
-      this.data.products.sort((a: IProduct, b: IProduct): number  => a.rating - b.rating);
+      this.data.products.sort((a: IProduct, b: IProduct): number => a.rating - b.rating);
     }
     if (filterSortParams.sort === 'ratingDesc') {
-      this.data.products.sort((a: IProduct, b: IProduct): number  => b.rating - a.rating);
+      this.data.products.sort((a: IProduct, b: IProduct): number => b.rating - a.rating);
     }
     if (filterSortParams.sort === 'brand' || filterSortParams.sort === '') {
-      this.data.products.sort((a: IProduct, b: IProduct): number  => {
+      this.data.products.sort((a: IProduct, b: IProduct): number => {
         if (a.brand > b.brand) {
           return 1;
         } else if (a.brand < b.brand) {
@@ -68,7 +62,7 @@ class ProductModel {
   }
 
   getFilteredCount(): number {
-    return this.data.products.filter(_ => _.excluded === false).length;
+    return this.data.products.filter((_) => _.excluded === false).length;
   }
 
   getCountByKey(key: 'brand' | 'category'): Map<string, numberRange> {
@@ -96,16 +90,18 @@ class ProductModel {
   }
 
   getPriceRange(): number4Range {
-    let min = Number.MAX_VALUE, max = 0;
-    let minFilter = Number.MAX_VALUE, maxFilter = 0;
+    let min = Number.MAX_VALUE,
+      max = 0;
+    let minFilter = Number.MAX_VALUE,
+      maxFilter = 0;
     let found = false;
     this.data.products.forEach((item: IProduct) => {
-      min = (item.price < min) ? item.price : min;
-      max = (item.price > max) ? item.price : max;
+      min = item.price < min ? item.price : min;
+      max = item.price > max ? item.price : max;
       if (!item.excluded) {
         found = true;
-        minFilter = (item.price < minFilter) ? item.price : minFilter;
-        maxFilter = (item.price > maxFilter) ? item.price : maxFilter;
+        minFilter = item.price < minFilter ? item.price : minFilter;
+        maxFilter = item.price > maxFilter ? item.price : maxFilter;
       }
     });
     if (!found) {
@@ -122,14 +118,16 @@ class ProductModel {
   }
 
   getStockRange(): number4Range {
-    let min = Number.MAX_VALUE, max = 0;
-    let minFilter = Number.MAX_VALUE, maxFilter = 0;
+    let min = Number.MAX_VALUE,
+      max = 0;
+    let minFilter = Number.MAX_VALUE,
+      maxFilter = 0;
     this.data.products.forEach((item: IProduct) => {
-      min = (item.stock < min) ? item.stock : min;
-      max = (item.stock > max) ? item.stock : max;
+      min = item.stock < min ? item.stock : min;
+      max = item.stock > max ? item.stock : max;
       if (!item.excluded) {
-        minFilter = (item.stock < minFilter) ? item.stock : minFilter;
-        maxFilter = (item.stock > maxFilter) ? item.stock : maxFilter;
+        minFilter = item.stock < minFilter ? item.stock : minFilter;
+        maxFilter = item.stock > maxFilter ? item.stock : maxFilter;
       }
     });
     if (maxFilter > max) {
@@ -142,9 +140,8 @@ class ProductModel {
   }
 
   getProductById(id: number): IProduct | undefined {
-    return this.data.products.filter(_ => _.id === id)[0];
+    return this.data.products.filter((_) => _.id === id)[0];
   }
-
 }
 
 export default ProductModel;

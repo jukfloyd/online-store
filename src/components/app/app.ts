@@ -2,12 +2,11 @@ import ProductsListAppController from '../controller/controller';
 import { IProductList } from './types';
 
 class App {
-
   async fetchDatabase<T>(): Promise<T> {
     const response: Response = await fetch('https://dummyjson.com/products?limit=100');
-    const data: T = await response.json()
+    const data: T = await response.json();
     if (response.ok) {
-        return data;
+      return data;
     } else {
       return Promise.reject('Error while receiving database');
     }
@@ -15,15 +14,14 @@ class App {
 
   start(): void {
     this.fetchDatabase()
-      .then(data => {
+      .then((data) => {
         const controller: ProductsListAppController = new ProductsListAppController(<IProductList>data);
         this.setEvents(controller);
       })
-      .catch(error => console.error(error));
+      .catch((error) => console.error(error));
   }
 
   setEvents(controller: ProductsListAppController): void {
-
     // Search event
     document.querySelector('.search')?.addEventListener('input', () => {
       controller.updateFilterObject('search');
@@ -35,8 +33,8 @@ class App {
     checkSelectors.forEach((selector) => {
       document.querySelector(selector)?.addEventListener('click', (e: Event) => {
         const target: HTMLElement = <HTMLElement>e.target;
-        if (target.nodeName === 'INPUT' || target.parentElement && target.parentElement.nodeName === 'LABEL') {
-          controller.updateFilterObject(selector.replace('.filter-',''));
+        if (target.nodeName === 'INPUT' || (target.parentElement && target.parentElement.nodeName === 'LABEL')) {
+          controller.updateFilterObject(selector.replace('.filter-', ''));
           controller.updateResults();
         }
       });
@@ -82,18 +80,18 @@ class App {
     });
 
     // View type event
-    document.querySelectorAll('.view-button').forEach(elem => {
+    document.querySelectorAll('.view-button').forEach((elem) => {
       elem.addEventListener('click', (e: Event) => {
-        document.querySelectorAll('.view-button').forEach(elem => {
+        document.querySelectorAll('.view-button').forEach((elem) => {
           elem.classList.remove('active');
-        })
+        });
         const target: HTMLElement = <HTMLElement>e.currentTarget;
         target.classList.add('active');
         controller.updateFilterObject('view');
         controller.updateResults();
       });
     });
-    
+
     // REset Filter event
     document.querySelector('.filter-reset')?.addEventListener('click', () => {
       controller.resetFilter();
@@ -185,7 +183,15 @@ class App {
     });
 
     // Order fields events
-    const orderSelectors = ['[name=order-name]', '[name=order-phone]', '[name=order-address]', '[name=order-email]', '[name=order-card-number]', '[name=order-card-until]', '[name=order-card-cvv]'];
+    const orderSelectors = [
+      '[name=order-name]',
+      '[name=order-phone]',
+      '[name=order-address]',
+      '[name=order-email]',
+      '[name=order-card-number]',
+      '[name=order-card-until]',
+      '[name=order-card-cvv]',
+    ];
     orderSelectors.forEach((selector) => {
       document.querySelector(selector)?.addEventListener('input', (e: Event) => {
         const target: HTMLInputElement = <HTMLInputElement>e.target;
@@ -194,7 +200,6 @@ class App {
       });
     });
   }
-
 }
 
 export default App;

@@ -29,8 +29,7 @@
 }
 
 .header-cart:hover .header-cart-svg,
-.header-cart:hover .header-cart-total
-{
+.header-cart:hover .header-cart-total {
   color: #8BC34A;
 }
 

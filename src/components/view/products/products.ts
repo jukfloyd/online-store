@@ -3,13 +3,15 @@ import View from '../view';
 import './products.css';
 
 class ProductsView extends View {
-  
   showProductsList(data: IProductList, filterSortParams: IFilterSort): void {
-
     document.querySelector('.products-list')!.innerHTML = '';
-    (filterSortParams.viewType === 'card') ? document.querySelector('.products-list')!.classList.add('cards') : document.querySelector('.products-list')!.classList.remove('cards');
+    filterSortParams.viewType === 'card'
+      ? document.querySelector('.products-list')!.classList.add('cards')
+      : document.querySelector('.products-list')!.classList.remove('cards');
     const fragment: DocumentFragment = document.createDocumentFragment();
-    const productItemTemp: HTMLTemplateElement = <HTMLTemplateElement>document.querySelector('#productTempl' + filterSortParams.viewType);
+    const productItemTemp: HTMLTemplateElement = <HTMLTemplateElement>(
+      document.querySelector('#productTempl' + filterSortParams.viewType)
+    );
 
     data.products.forEach((item: IProduct) => {
       if (!item.excluded) {
@@ -28,13 +30,13 @@ class ProductsView extends View {
 
         const imgDiv: Element | null = productClone.querySelector('.product-image');
         if (imgDiv) {
-          (<HTMLElement>imgDiv).style.backgroundImage = 'url(\'' + item.thumbnail + '\')';
+          (<HTMLElement>imgDiv).style.backgroundImage = "url('" + item.thumbnail + "')";
         }
 
         fragment.append(productClone);
       }
     });
-    const productCount: number = data.products.filter(_ => !_.excluded).length;
+    const productCount: number = data.products.filter((_) => !_.excluded).length;
     document.querySelector('.products-count')!.innerHTML = `${productCount}`;
     if (productCount) {
       document.querySelector('.products-list')!.appendChild(fragment);
@@ -48,12 +50,11 @@ class ProductsView extends View {
   }
 
   createProductsFilter(filterContent: IFilterSort): void {
-
     const filterTemp: HTMLTemplateElement = <HTMLTemplateElement>document.querySelector('#checkboxWithCount');
 
     // Set brands
     const fragmentBrand: DocumentFragment = document.createDocumentFragment();
-    filterContent.brands.forEach(item => {
+    filterContent.brands.forEach((item) => {
       const elemClone: HTMLElement = <HTMLElement>filterTemp.content.cloneNode(true);
       elemClone.querySelector('.filter-checkbox__text')!.textContent = item;
       (<HTMLInputElement>elemClone.querySelector('.filter-checkbox__input')!).value = item;
@@ -63,7 +64,7 @@ class ProductsView extends View {
 
     // Set categories
     const fragmentCategory: DocumentFragment = document.createDocumentFragment();
-    filterContent.categories.forEach(item => {
+    filterContent.categories.forEach((item) => {
       const elemClone: HTMLElement = <HTMLElement>filterTemp.content.cloneNode(true);
       elemClone.querySelector('.filter-checkbox__text')!.textContent = item;
       (<HTMLInputElement>elemClone.querySelector('.filter-checkbox__input')!).value = item;
@@ -75,18 +76,30 @@ class ProductsView extends View {
     const priceFieldFrom: Element | null = document.querySelector('.price-from');
     const priceFieldTo: Element | null = document.querySelector('.price-to');
     if (priceFieldFrom && priceFieldTo && filterContent.price) {
-      (<HTMLInputElement>priceFieldFrom).value = (<HTMLInputElement>priceFieldFrom).min = (<HTMLInputElement>priceFieldTo).min = filterContent.price[0].toString();
-      (<HTMLInputElement>priceFieldTo).value = (<HTMLInputElement>priceFieldFrom).max = (<HTMLInputElement>priceFieldTo).max = filterContent.price[1].toString();
+      (<HTMLInputElement>priceFieldFrom).value =
+        (<HTMLInputElement>priceFieldFrom).min =
+        (<HTMLInputElement>priceFieldTo).min =
+          filterContent.price[0].toString();
+      (<HTMLInputElement>priceFieldTo).value =
+        (<HTMLInputElement>priceFieldFrom).max =
+        (<HTMLInputElement>priceFieldTo).max =
+          filterContent.price[1].toString();
       (<HTMLElement>document.querySelector('.price-from-value')!).textContent = '€' + filterContent.price[0].toFixed(2);
       (<HTMLElement>document.querySelector('.price-to-value')!).textContent = '€' + filterContent.price[1].toFixed(2);
     }
-    
+
     // Set Stock range
     const stockFieldFrom: Element | null = document.querySelector('.stock-from');
     const stockFieldTo: Element | null = document.querySelector('.stock-to');
     if (stockFieldFrom && stockFieldTo && filterContent.stock) {
-      (<HTMLInputElement>stockFieldFrom).value = (<HTMLInputElement>stockFieldFrom).min = (<HTMLInputElement>stockFieldTo).min = filterContent.stock[0].toString();
-      (<HTMLInputElement>stockFieldTo).value = (<HTMLInputElement>stockFieldFrom).max = (<HTMLInputElement>stockFieldTo).max = filterContent.stock[1].toString();
+      (<HTMLInputElement>stockFieldFrom).value =
+        (<HTMLInputElement>stockFieldFrom).min =
+        (<HTMLInputElement>stockFieldTo).min =
+          filterContent.stock[0].toString();
+      (<HTMLInputElement>stockFieldTo).value =
+        (<HTMLInputElement>stockFieldFrom).max =
+        (<HTMLInputElement>stockFieldTo).max =
+          filterContent.stock[1].toString();
       (<HTMLElement>document.querySelector('.stock-from-value')!).textContent = '€' + filterContent.stock[0].toFixed(2);
       (<HTMLElement>document.querySelector('.stock-to-value')!).textContent = '€' + filterContent.stock[1].toFixed(2);
     }
@@ -96,8 +109,12 @@ class ProductsView extends View {
     (document.querySelectorAll('.filter-brand input') as NodeListOf<HTMLInputElement>).forEach((input) => {
       input.checked = filterSortParams.brands.includes(input.value);
       const countRange: numberRange | undefined = count.get(input.value);
-      input.parentNode!.querySelector('.filter-brand .filter-checkbox__count')!.innerHTML = (countRange) ? '[' + countRange.join('/') + ']' : '';
-      input.parentNode!.querySelector('.filter-brand .filter-checkbox__text')!.classList.toggle('filter-checkbox__text_light', (countRange && countRange[0] === 0));
+      input.parentNode!.querySelector('.filter-brand .filter-checkbox__count')!.innerHTML = countRange
+        ? '[' + countRange.join('/') + ']'
+        : '';
+      input
+        .parentNode!.querySelector('.filter-brand .filter-checkbox__text')!
+        .classList.toggle('filter-checkbox__text_light', countRange && countRange[0] === 0);
     });
   }
 
@@ -105,8 +122,12 @@ class ProductsView extends View {
     (document.querySelectorAll('.filter-category input') as NodeListOf<HTMLInputElement>).forEach((input) => {
       input.checked = filterSortParams.categories.includes(input.value);
       const countRange: numberRange | undefined = count.get(input.value);
-      input.parentNode!.querySelector('.filter-category .filter-checkbox__count')!.innerHTML = (countRange) ? '[' + countRange.join('/') + ']' : '';
-      input.parentNode!.querySelector('.filter-category .filter-checkbox__text')!.classList.toggle('filter-checkbox__text_light', (countRange && countRange[0] === 0));
+      input.parentNode!.querySelector('.filter-category .filter-checkbox__count')!.innerHTML = countRange
+        ? '[' + countRange.join('/') + ']'
+        : '';
+      input
+        .parentNode!.querySelector('.filter-category .filter-checkbox__text')!
+        .classList.toggle('filter-checkbox__text_light', countRange && countRange[0] === 0);
     });
   }
 
@@ -142,8 +163,10 @@ class ProductsView extends View {
     (<HTMLInputElement>document.querySelector('.search')!).value = filterSortParams.search || '';
 
     // View
-    document.querySelectorAll('.view-button').forEach(elem => {
-      (elem.getAttribute('value') === filterSortParams.viewType) ? elem.classList.add('active') : elem.classList.remove('active');
+    document.querySelectorAll('.view-button').forEach((elem) => {
+      elem.getAttribute('value') === filterSortParams.viewType
+        ? elem.classList.add('active')
+        : elem.classList.remove('active');
     });
   }
 
@@ -171,11 +194,11 @@ class ProductsView extends View {
     const imgDiv: Element | null = document.querySelector('.product-page .product-photo-big');
     const allPhoto: Element | null = document.querySelector('.product-photo-all');
     if (imgDiv && allPhoto) {
-      (<HTMLElement>imgDiv).style.backgroundImage = 'url(\'' + item.thumbnail + '\')';
-      item.images.forEach(imageUrl => {
+      (<HTMLElement>imgDiv).style.backgroundImage = "url('" + item.thumbnail + "')";
+      item.images.forEach((imageUrl) => {
         const smallPhoto: HTMLDivElement = document.createElement('div');
         smallPhoto.classList.add('product-photo-small');
-        smallPhoto.style.backgroundImage = 'url(\'' + imageUrl + '\')';
+        smallPhoto.style.backgroundImage = "url('" + imageUrl + "')";
         allPhoto.append(smallPhoto);
       });
     }
@@ -184,18 +207,20 @@ class ProductsView extends View {
     breadCategory!.href = 'index.html?categories=' + encodeURIComponent(item.category);
     breadCategory!.innerHTML = item.category;
     const breadBrand: HTMLAnchorElement = <HTMLAnchorElement>document.querySelector('.breadcrumbs .brand');
-    breadBrand!.href = 'index.html?categories=' + encodeURIComponent(item.category) + '&brands=' + encodeURIComponent(item.brand);
+    breadBrand!.href =
+      'index.html?categories=' + encodeURIComponent(item.category) + '&brands=' + encodeURIComponent(item.brand);
     breadBrand!.innerHTML = item.brand;
     document.querySelector('.breadcrumbs .product')!.innerHTML = item.title;
     document.querySelector('.product-page')!.classList.remove('hide');
   }
 
   showBigPicture(product: IProduct, indx: number): void {
-    (<HTMLElement>document.querySelector('.product-page .product-photo-big')!).style.backgroundImage = 'url(\'' + product.images[indx] + '\')';
+    (<HTMLElement>document.querySelector('.product-page .product-photo-big')!).style.backgroundImage =
+      "url('" + product.images[indx] + "')";
   }
 
   changeCartButtons(data: IProduct[]): void {
-    const idArray: number[] = data.map(_ => _.id);
+    const idArray: number[] = data.map((_) => _.id);
     document.querySelectorAll('.add-to-cart-button').forEach((item) => {
       const id: string | null = item.getAttribute('data-id');
       if (id && idArray.includes(parseInt(id))) {
@@ -207,7 +232,6 @@ class ProductsView extends View {
       }
     });
   }
-  
 }
 
-export default ProductsView
+export default ProductsView;

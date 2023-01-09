@@ -3,7 +3,6 @@ import View from '../view';
 import './cart.css';
 
 class CartView extends View {
-
   showHeaderCount(count: number): void {
     document.querySelector('.header-cart-count')!.innerHTML = count.toString();
   }
@@ -13,11 +12,9 @@ class CartView extends View {
   }
 
   showCart(data: IProduct[], count: number, total: number, cartPage: IPagination): void {
-
     this.showHeaderCount(count);
     this.showHeaderTotal(total);
     document.querySelector('.cart-list')!.innerHTML = '';
-
 
     const fragment: DocumentFragment = document.createDocumentFragment();
     const carItemTemp: HTMLTemplateElement = <HTMLTemplateElement>document.querySelector('#templateCart');
@@ -26,13 +23,19 @@ class CartView extends View {
       data.forEach((item, indx) => {
         const productClone: HTMLElement = <HTMLElement>carItemTemp.content.cloneNode(true);
 
-        if (!item.cart) { item.cart = 0; }
-        this.safeInnerHTML('.item-number', (indx + 1 + cartPage.countOnPage*(cartPage.pageNum - 1)).toString(), productClone);
+        if (!item.cart) {
+          item.cart = 0;
+        }
+        this.safeInnerHTML(
+          '.item-number',
+          (indx + 1 + cartPage.countOnPage * (cartPage.pageNum - 1)).toString(),
+          productClone
+        );
         this.safeInnerHTML('.item-title', item.title, productClone);
         this.safeInnerHTML('.item-description', item.description, productClone);
         this.safeInnerHTML('.item-brand', item.brand, productClone);
         this.safeInnerHTML('.item-category', item.category, productClone);
-        this.safeInnerHTML('.item-price', '€' + (item.price*item.cart).toFixed(2), productClone);
+        this.safeInnerHTML('.item-price', '€' + (item.price * item.cart).toFixed(2), productClone);
         this.safeInnerHTML('.item-discount', item.discountPercentage.toString() + '%', productClone);
         this.safeInnerHTML('.item-rating', item.rating.toString(), productClone);
         this.safeInnerHTML('.item-stock', item.stock.toString(), productClone);
@@ -41,7 +44,7 @@ class CartView extends View {
         this.safeAttribute('.cart-plus', 'data-id', item.id.toString(), productClone);
         const imgDiv: Element | null = productClone.querySelector('.cart-image');
         if (imgDiv) {
-          (<HTMLElement>imgDiv).style.backgroundImage = 'url(\'' + item.thumbnail + '\')';
+          (<HTMLElement>imgDiv).style.backgroundImage = "url('" + item.thumbnail + "')";
         }
 
         fragment.append(productClone);
@@ -72,7 +75,7 @@ class CartView extends View {
   }
 
   clearPromoCodeForAdd(): void {
-    document.querySelector('.cart-promocode-found')!.classList.add('hide'); 
+    document.querySelector('.cart-promocode-found')!.classList.add('hide');
     (<HTMLInputElement>document.querySelector('.cart-promocode')!).value = '';
   }
 
@@ -82,7 +85,7 @@ class CartView extends View {
 
       const fragment: DocumentFragment = document.createDocumentFragment();
       const promoTemp: HTMLTemplateElement = <HTMLTemplateElement>document.querySelector('#templatePromo');
-      promoCodes.forEach(item => {
+      promoCodes.forEach((item) => {
         const promoClone: HTMLElement = <HTMLElement>promoTemp.content.cloneNode(true);
         this.safeInnerHTML('.promo-name', item[0], promoClone);
         this.safeInnerHTML('.promo-discount', item[1].toString() + '%', promoClone);
@@ -90,7 +93,9 @@ class CartView extends View {
         fragment.append(promoClone);
       });
       document.querySelector('.cart-promocode-list')!.appendChild(fragment);
-      document.querySelector('.cart-total-discount')!.innerHTML = (promoCodes.length) ? '€' + totalSumWithDiscount.toFixed(2) : '';
+      document.querySelector('.cart-total-discount')!.innerHTML = promoCodes.length
+        ? '€' + totalSumWithDiscount.toFixed(2)
+        : '';
       document.querySelector('.cart-promocode-block')!.classList.remove('hide');
       document.querySelector('.cart-total')!.classList.add('line-thru');
     } else {

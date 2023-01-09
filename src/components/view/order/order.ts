@@ -1,9 +1,8 @@
-import { checkResult } from "../../app/types";
-import View from "../view";
+import { checkResult } from '../../app/types';
+import View from '../view';
 import './order.css';
 
 class OrderView extends View {
-
   showOrderForm(): void {
     document.querySelector('.body')!.classList.add('overlay');
     document.querySelector('.order-form')!.classList.remove('hide');
@@ -37,7 +36,7 @@ class OrderView extends View {
   }
 
   styleCreditCardField(input: HTMLInputElement): void {
-    ['visa','ecmc','mir'].forEach(item => {
+    ['visa', 'ecmc', 'mir'].forEach((item) => {
       input.classList.remove(item);
     });
     if (input.value.match(/^5\d/) !== null) {
@@ -48,7 +47,6 @@ class OrderView extends View {
       input.classList.add('mir');
     }
   }
-
 }
 
 export default OrderView;

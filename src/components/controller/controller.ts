@@ -1,11 +1,20 @@
-import { IProduct, IProductList, checkResult, IFilterSort, IPagination, number4Range, StrNumArr, stringPair } from "../app/types";
-import ProductModel from "../model/model";
-import ProductsView from "../view/products/products";
-import CartModel from "../model/cart";
-import CartView from "../view/cart/cart";
-import OrderModel from "../model/order";
-import OrderView from "../view/order/order";
-import View from "../view/view";
+import {
+  IProduct,
+  IProductList,
+  checkResult,
+  IFilterSort,
+  IPagination,
+  number4Range,
+  StrNumArr,
+  stringPair,
+} from '../app/types';
+import ProductModel from '../model/model';
+import ProductsView from '../view/products/products';
+import CartModel from '../model/cart';
+import CartView from '../view/cart/cart';
+import OrderModel from '../model/order';
+import OrderView from '../view/order/order';
+import View from '../view/view';
 
 class ProductsListController {
   filterSort: IFilterSort;
@@ -26,8 +35,8 @@ class ProductsListController {
     this.orderModel = new OrderModel();
     this.orderView = new OrderView();
     this.view = new View();
-    this.cartPage = { 'countOnPage': 50, 'pageNum': 1};
-    this.filterSort = { 'brands': [], categories: []};
+    this.cartPage = { countOnPage: 50, pageNum: 1 };
+    this.filterSort = { brands: [], categories: [] };
 
     const url: URL = new URL(window.location.href);
     const brandsParam: string | null = url.searchParams.get('brands');
@@ -48,26 +57,26 @@ class ProductsListController {
     }
     const countOnPage: string | null = url.searchParams.get('countOnPage');
     const pageNum: string | null = url.searchParams.get('pageNum');
-    
+
     this.cartView.showHeaderCount(this.cartModel.getCount());
     this.cartView.showHeaderTotal(this.cartModel.getTotalSum());
 
     if (layer === '') {
       this.filterSort = {
         sort: sortParam || '',
-        brands: (brandsParam) ? brandsParam.split('↕').map(_ => decodeURIComponent(_)) : [],
-        categories: (categoriesParam) ? categoriesParam.split('↕').map(_ => decodeURIComponent(_)) : [],
+        brands: brandsParam ? brandsParam.split('↕').map((_) => decodeURIComponent(_)) : [],
+        categories: categoriesParam ? categoriesParam.split('↕').map((_) => decodeURIComponent(_)) : [],
       };
       if (priceParam) {
-        this.filterSort.price = priceParam.split('↕').map(_ => parseInt(_)) as [number, number];
+        this.filterSort.price = priceParam.split('↕').map((_) => parseInt(_)) as [number, number];
       }
       if (stockParam) {
-        this.filterSort.stock = stockParam.split('↕').map(_ => parseInt(_)) as [number, number];
+        this.filterSort.stock = stockParam.split('↕').map((_) => parseInt(_)) as [number, number];
       }
       if (searchParam) {
         this.filterSort.search = decodeURIComponent(searchParam);
       }
-      this.filterSort.viewType = (viewParam === 'card') ? viewParam : '';
+      this.filterSort.viewType = viewParam === 'card' ? viewParam : '';
       this.createResults();
     } else if (layer === 'cart') {
       if (countOnPage && pageNum) {
@@ -89,7 +98,7 @@ class ProductsListController {
           brands: [],
           categories: [],
           id: parseInt(id),
-        }
+        };
         this.createProductPage();
       } else {
         this.view.show404();
@@ -143,19 +152,18 @@ class ProductsListController {
 
   updateUrl(): void {
     const filterParams: stringPair = {
-      'brands': this.filterSort.brands.map(_ => encodeURIComponent(_)).join('↕'),
-      'categories': this.filterSort.categories.map(_ => encodeURIComponent(_)).join('↕'),
-      'sort': (this.filterSort.sort) ? encodeURIComponent(this.filterSort.sort) : '',
-      'price': (this.filterSort.price) ? this.filterSort.price.join('↕') : '',
-      'stock': (this.filterSort.stock) ? this.filterSort.stock.join('↕') : '',
-      'search': (this.filterSort.search) ? encodeURIComponent(this.filterSort.search) : '',
-      'view': (this.filterSort.viewType) ? this.filterSort.viewType : '',
+      brands: this.filterSort.brands.map((_) => encodeURIComponent(_)).join('↕'),
+      categories: this.filterSort.categories.map((_) => encodeURIComponent(_)).join('↕'),
+      sort: this.filterSort.sort ? encodeURIComponent(this.filterSort.sort) : '',
+      price: this.filterSort.price ? this.filterSort.price.join('↕') : '',
+      stock: this.filterSort.stock ? this.filterSort.stock.join('↕') : '',
+      search: this.filterSort.search ? encodeURIComponent(this.filterSort.search) : '',
+      view: this.filterSort.viewType ? this.filterSort.viewType : '',
     };
     this.view.updateUrl('/', filterParams);
   }
 
   updateFilterObject(filterName?: string): void {
-
     // brands
     if (filterName === 'brand') {
       const brandInputs: NodeListOf<HTMLInputElement> = document.querySelectorAll('.filter-brand input');
@@ -193,7 +201,10 @@ class ProductsListController {
       const priceFromField: Element | null = document.querySelector('.price-from');
       const priceToField: Element | null = document.querySelector('.price-to');
       if (priceFromField && priceToField) {
-        this.filterSort.price = [parseInt((<HTMLInputElement>priceFromField).value), parseInt((<HTMLInputElement>priceToField).value)];
+        this.filterSort.price = [
+          parseInt((<HTMLInputElement>priceFromField).value),
+          parseInt((<HTMLInputElement>priceToField).value),
+        ];
       }
     }
 
@@ -202,13 +213,16 @@ class ProductsListController {
       const stockFromField: Element | null = document.querySelector('.stock-from');
       const stockToField: Element | null = document.querySelector('.stock-to');
       if (stockFromField && stockToField) {
-        this.filterSort.stock = [parseInt((<HTMLInputElement>stockFromField).value), parseInt((<HTMLInputElement>stockToField).value)];
+        this.filterSort.stock = [
+          parseInt((<HTMLInputElement>stockFromField).value),
+          parseInt((<HTMLInputElement>stockToField).value),
+        ];
       }
     }
 
     // search
     if (filterName === 'search') {
-      const searchField: Element | null = document.querySelector('.search')
+      const searchField: Element | null = document.querySelector('.search');
       if (searchField) {
         this.filterSort.search = (<HTMLInputElement>searchField).value;
       }
@@ -242,7 +256,7 @@ class ProductsListController {
   addOrDropCart(target: HTMLElement): void {
     const id: string | null = target.getAttribute('data-id');
     if (id) {
-      const product: IProduct | undefined  = this.productModel.getProductById(parseInt(id));
+      const product: IProduct | undefined = this.productModel.getProductById(parseInt(id));
       if (product) {
         this.cartModel.addOrDrop(product);
         this.cartView.showHeaderCount(this.cartModel.getCount());
@@ -255,18 +269,21 @@ class ProductsListController {
   goCart(): void {
     this.view.hideAllLayers();
     this.view.updateUrl('/cart', {
-      'countOnPage': this.cartPage.countOnPage.toString(),
-      'pageNum': this.cartPage.pageNum.toString(),
+      countOnPage: this.cartPage.countOnPage.toString(),
+      pageNum: this.cartPage.pageNum.toString(),
     });
     const productsPaged: IProduct[] = this.cartModel.filterByPage(this.cartPage);
     this.cartView.showCart(productsPaged, this.cartModel.getCount(), this.cartModel.getTotalSum(), this.cartPage);
-    this.cartView.showAllAppliedPromoCodes(this.cartModel.getAllAppliedPromoCodes(), this.cartModel.getTotalSumWithDiscount());
+    this.cartView.showAllAppliedPromoCodes(
+      this.cartModel.getAllAppliedPromoCodes(),
+      this.cartModel.getTotalSumWithDiscount()
+    );
   }
 
   plusCount(target: HTMLElement): void {
     const id: string | null = target.getAttribute('data-id');
     if (id) {
-      const product: IProduct | undefined  = this.productModel.getProductById(parseInt(id));
+      const product: IProduct | undefined = this.productModel.getProductById(parseInt(id));
       if (product) {
         this.cartModel.plusCount(product);
         this.cartPage.pageNum = this.cartModel.getRealPageNum(this.cartPage);
@@ -276,7 +293,10 @@ class ProductsListController {
         this.cartView.showHeaderTotal(totalSum);
         const productsPaged: IProduct[] = this.cartModel.filterByPage(this.cartPage);
         this.cartView.showCart(productsPaged, count, totalSum, this.cartPage);
-        this.cartView.showAllAppliedPromoCodes(this.cartModel.getAllAppliedPromoCodes(), this.cartModel.getTotalSumWithDiscount());
+        this.cartView.showAllAppliedPromoCodes(
+          this.cartModel.getAllAppliedPromoCodes(),
+          this.cartModel.getTotalSumWithDiscount()
+        );
       }
     }
   }
@@ -284,7 +304,7 @@ class ProductsListController {
   minusCount(target: HTMLElement): void {
     const id: string | null = target.getAttribute('data-id');
     if (id) {
-      const product: IProduct | undefined  = this.productModel.getProductById(parseInt(id));
+      const product: IProduct | undefined = this.productModel.getProductById(parseInt(id));
       if (product) {
         this.cartModel.minusCount(product);
         this.cartPage.pageNum = this.cartModel.getRealPageNum(this.cartPage);
@@ -294,7 +314,10 @@ class ProductsListController {
         this.cartView.showHeaderTotal(totalSum);
         const productsPaged: IProduct[] = this.cartModel.filterByPage(this.cartPage);
         this.cartView.showCart(productsPaged, count, totalSum, this.cartPage);
-        this.cartView.showAllAppliedPromoCodes(this.cartModel.getAllAppliedPromoCodes(), this.cartModel.getTotalSumWithDiscount());
+        this.cartView.showAllAppliedPromoCodes(
+          this.cartModel.getAllAppliedPromoCodes(),
+          this.cartModel.getTotalSumWithDiscount()
+        );
       }
     }
   }
@@ -313,14 +336,20 @@ class ProductsListController {
     const promoText: string = (<HTMLInputElement>document.querySelector('.cart-promocode')!).value;
     this.cartModel.applyPromoCode(promoText);
     this.cartView.clearPromoCodeForAdd();
-    this.cartView.showAllAppliedPromoCodes(this.cartModel.getAllAppliedPromoCodes(), this.cartModel.getTotalSumWithDiscount());
+    this.cartView.showAllAppliedPromoCodes(
+      this.cartModel.getAllAppliedPromoCodes(),
+      this.cartModel.getTotalSumWithDiscount()
+    );
   }
 
   removePromoCode(target: HTMLElement): void {
     const promoText: string | null = target.getAttribute('data-id');
     if (promoText) {
       this.cartModel.removePromoCode(promoText);
-      this.cartView.showAllAppliedPromoCodes(this.cartModel.getAllAppliedPromoCodes(), this.cartModel.getTotalSumWithDiscount());
+      this.cartView.showAllAppliedPromoCodes(
+        this.cartModel.getAllAppliedPromoCodes(),
+        this.cartModel.getTotalSumWithDiscount()
+      );
     }
   }
 
@@ -357,20 +386,19 @@ class ProductsListController {
 
   createProductPage(): void {
     if (this.filterSort.id) {
-      const product: IProduct | undefined  = this.productModel.getProductById(this.filterSort.id);
+      const product: IProduct | undefined = this.productModel.getProductById(this.filterSort.id);
       if (product) {
         this.productsView.showProduct(product);
         this.productsView.changeCartButtons(this.cartModel.products);
       } else {
         this.view.show404();
       }
-      
     }
   }
 
   showBigPicture(element: HTMLElement): void {
     if (element.classList.contains('product-photo-small') && this.filterSort.id) {
-      const product: IProduct | undefined  = this.productModel.getProductById(this.filterSort.id);
+      const product: IProduct | undefined = this.productModel.getProductById(this.filterSort.id);
       if (product) {
         this.productsView.showBigPicture(product, Array.from(element.parentNode!.children).indexOf(element));
       }
@@ -384,7 +412,7 @@ class ProductsListController {
   buyNow(target: HTMLElement): void {
     const id: string | null = target.getAttribute('data-id');
     if (id) {
-      const product: IProduct | undefined  = this.productModel.getProductById(parseInt(id));
+      const product: IProduct | undefined = this.productModel.getProductById(parseInt(id));
       if (product) {
         if (!this.cartModel.hasId(parseInt(id))) {
           this.cartModel.addOrDrop(product);
@@ -399,7 +427,7 @@ class ProductsListController {
 
   submitOrder(): void {
     let formCheck = true;
-    document.querySelectorAll('.order-form input').forEach(elem => {
+    document.querySelectorAll('.order-form input').forEach((elem) => {
       if ((<HTMLInputElement>elem).type !== 'submit' && !this.checkField(<HTMLInputElement>elem)) {
         formCheck = false;
       }
