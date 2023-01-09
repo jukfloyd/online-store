@@ -81,7 +81,11 @@ class CartModel {
   getTotalSumWithDiscount(): number {
     const totalSum: number = this.getTotalSum();
     const totalDiscount: number = this.promoCodes.map(_ => promoCodeValues[_]).reduce((sum, currValue) => sum += currValue, 0);
-    return Math.round(100*totalSum*(1 - 0.01*totalDiscount))/100;
+    return this.getRealRoundWith2Decimals(totalSum*(1 - 0.01*totalDiscount));
+  }
+
+  getRealRoundWith2Decimals(num: number): number {
+    return Math.round(Math.round(10000*num)/100)/100;
   }
 
   searchNotAppliedPromoCode(promoText: string): StrNumArr | null {
