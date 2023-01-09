@@ -1,0 +1,108 @@
+* {
+	box-sizing: border-box;
+}
+
+a,
+a:visited {
+  text-decoration: none;
+  color: inherit;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+}
+
+.overlay:before {
+  content: "";
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: #000000;
+  opacity: 0.5;
+  z-index: 100;
+}
+
+.header {
+  background-color: #EEEEEE;
+}
+
+.main {
+  flex-grow: 1;
+}
+
+.container,
+.header-container,
+.footer-container,
+.main-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px 10px;
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100px;
+}
+
+.filter {
+  width: 240px;
+  flex-shrink: 0;
+}
+
+.results-block {
+  padding: 20px 0 20px 20px;
+  width: 100%;
+}
+
+.cart-page {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.header-logo img {
+  height: 100px;
+}
+
+.footer {
+  border: 1px solid green;
+  background: #616161;
+}
+
+.footer-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.footer-container .copyright {
+  font-size: 14px;
+  color: #fff;
+  text-align: center;
+}
+
+.footer-container .copyright:before {
+  content: '©';
+}
+
+.footer-container .rsschool img {
+  width: 60px;
+}
+
+.footer-container .github img {
+  width: 60px;
+}
+
+.hide {
+  display: none;
+}
