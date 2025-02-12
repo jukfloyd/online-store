@@ -50,6 +50,9 @@ class OrderModel {
   isCreditCardNumberValid(ccn: string): boolean {
     let sum = 0;
     ccn = ccn.replace(/ /g, '');
+    if (ccn.length != 16) {
+      return false;
+    }
     `${ccn}`
       .split('')
       .reverse()
