@@ -15,7 +15,7 @@ const stylesHandler = isProduction
 const config = {
   entry: path.resolve(__dirname, "./src/index.ts"),
   output: {
-    path: path.resolve(__dirname, "dist"),
+    path: path.resolve(__dirname, "public"),
   },
   devServer: {
     open: true,
@@ -42,7 +42,7 @@ const config = {
   ],
   module: {
     rules: [
-      { 
+      {
         test: /\.ts$/i,
         use: 'ts-loader'
       },
